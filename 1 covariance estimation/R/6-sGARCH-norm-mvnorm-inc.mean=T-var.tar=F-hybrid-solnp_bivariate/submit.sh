@@ -1,0 +1,1 @@
+bsub -R "rusage[mem=1024]" -n 48 -W 24:00 "Rscript main.R > log.txt"

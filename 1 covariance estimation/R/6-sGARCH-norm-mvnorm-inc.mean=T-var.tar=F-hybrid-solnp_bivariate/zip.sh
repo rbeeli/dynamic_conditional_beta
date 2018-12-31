@@ -1,0 +1,1 @@
+zip -r -q out.zip out

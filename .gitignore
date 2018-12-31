@@ -1,0 +1,15 @@
+WRDS_pwd.txt
+.Rhistory
+parallel-log.txt
+out
+TRUE
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.lof
+report/*.lot
+report/*.log
+report/*.out
+report/*.synctex.gz
+report/*.toc
+CRSP
