@@ -1,0 +1,35 @@
+% arara: pdflatex
+
+\documentclass[11pt,a4paper]{article}
+\input{_preamble.tex}
+
+
+
+\begin{document}
+
+%% --------------------------------------------------
+%% Title page
+%% --------------------------------------------------
+\input{sec_titlepage.tex}
+
+
+\setlength{\parskip}{0.4cm} 
+
+
+
+%% --------------------------------------------------
+%% Executive summary
+%% --------------------------------------------------
+\newpage
+\input{sec_executive_summary.tex}
+
+
+%% --------------------------------------------------
+%% References
+%% --------------------------------------------------
+\newpage
+\bibliography{_references}
+
+
+
+\end{document}

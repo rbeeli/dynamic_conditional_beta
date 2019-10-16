@@ -18,7 +18,7 @@ date.from <- '1996-01-02'
 date.to <- '2013-12-31'
 
 # equal- or value-weighted portfolio returns
-value.weighted <- F
+value.weighted <- T
 
 # how many tiles (deciles = 10)
 ntiles <- 10
@@ -234,7 +234,7 @@ backtest <- function(label, dates, ff, ret.market, ret.stocks, weights, vol, prc
   ))
 }
 
-backtest.consolidated <- function(label, dirPath, texMarker, betaName, ma) {
+backtest.consolidated <- function(label, dirPath, texMarker, ma) {
   cat('> ', label, '\n')
   
   var.market <- remove.colnames.prefixes(fread(paste0(dirPath, 'vars.1stepahead.market.csv'), header=T, sep=';'), 'x')
@@ -266,7 +266,6 @@ backtest.consolidated <- function(label, dirPath, texMarker, betaName, ma) {
   backtest.res <- backtest(label, dates, ff, ret.market, ret.stocks, weights, vol, prc, shrout, cap, covs.stocks, var.market, ma)
   backtest.res[['label']] <- label
   backtest.res[['texMarker']] <- texMarker
-  backtest.res[['betaName']] <- betaName
   
   return(backtest.res)
 }
@@ -294,15 +293,11 @@ backtest.consolidated <- function(label, dirPath, texMarker, betaName, ma) {
 
 
 
-
-
-
-
-
 results <- list(
-  backtest.consolidated('CAPM', '../1 covariance estimation/R/1-CAPM/consolidated/', 'C', 'CAPM', ma),
-  backtest.consolidated('DCC', '../1 covariance estimation/Matlab/DCC1step/consolidated/', 'D', 'DCC', ma),
-  backtest.consolidated('COMFORT-DCC', '../1 covariance estimation/Matlab/COMFORT-DCC/consolidated/', 'CD', 'CDCC', ma)
+  backtest.consolidated('CAPM-252', '../1 covariance estimation/R/CAPM/consolidated_252/', 'C', ma),
+  backtest.consolidated('DCC-252', '../1 covariance estimation/Matlab/DCC1step_252/consolidated/', 'D', ma),
+  backtest.consolidated('DCC-1000', '../1 covariance estimation/Matlab/DCC1step_1000/consolidated/', 'D1k', ma),
+  backtest.consolidated('CDCC-1000', '../1 covariance estimation/Matlab/COMFORT-DCC/consolidated/', 'CD', ma)
 )
 
 
@@ -313,7 +308,8 @@ results <- list(
 # Plots
 ###################################################
 
-cols <- c('red', 'blue', 'green', 'violet', 'orange', 'black', 'darkmagenta', brewer.pal(3, 'Set1'))
+cols <- c('#e93030', '#0073d5', '#379b26', '#ff8f00', '#03b5b5', '#f7c853', '#8e7d00', '#09d293', '#403b6e', '#cf69e1')
+lty <- c(1, 2, 3, 4)
 leg <- unlist(lapply(results, function(x) x$label))
 
 
@@ -347,7 +343,6 @@ for (i in 1:length(results)) {
   
   
   # plot cum. return per decile
-  cols.1 <- brewer.pal(3, 'Set1')
   plot.a4 <- colCumsums(result$deciles.rets)
   
   labels.x <- sapply(dates, function(d) format(as.Date(d), '%m.%Y'))
@@ -356,20 +351,20 @@ for (i in 1:length(results)) {
   labels.y <- seq(-20, 20, by=0.5)
   labels.y.at <- seq(-20, 20, by=0.5)
   
-  matplot(plot.a4, type='l', xaxt='n', yaxt='n', ylab='', lty=1, lwd=0.5, main=paste('Decile returns', result$label), col=cols, xaxs='i')
+  matplot(plot.a4, type='l', xaxt='n', yaxt='n', ylab='', lty=1, lwd=1, main=paste('Decile returns', result$label), col=cols, xaxs='i')
   axis(1, at=labels.x.at, labels=F)
   text(labels.x.at, par("usr")[3] - 0.18, labels=labels.x[labels.x.at], cex=.85, srt=45, adj=1, xpd=T)
   axis(2, at=labels.y.at, lab=paste0(labels.y * 100, '%'), las=TRUE, cex.axis=.85)
-  legend('topleft', col=c(cols, 'black'), border='white', fill=c(cols, 'black'), legend=paste0('Decile ', 1:10), bty='n')
+  legend('topleft', col=c(cols, 'black'), border='white', lty=1, lwd=2, legend=paste0('Decile ', 1:10), bty='n')
   
   # save tex
   if (tex.output) {
     tikz(file=paste0(tex.dir, sample.name, '_cum_ret_deciles_', result$label, '.tex'), width=6, height=4)
-    plot.a4.dev <- matplot(colCumsums(result$deciles.rets), type='l', xaxt='n', yaxt='n', ylab='', lty=1, lwd=0.4, col=cols, xaxs='i')
+    plot.a4.dev <- matplot(colCumsums(result$deciles.rets), type='l', xaxt='n', yaxt='n', ylab='', lty=1, lwd=1, col=cols, xaxs='i')
     axis(1, at=labels.x.at, labels=F)
     text(labels.x.at, par("usr")[3] - 0.18, labels=labels.x[labels.x.at], cex=.85, srt=45, adj=1, xpd=T)
     axis(2, at=labels.y.at, lab=paste0(labels.y * 100, '\\%'), las=TRUE, cex.axis=.85)
-    legend('topleft', col=c(cols, 'black'), border='white', fill=c(cols, 'black'), legend=paste0('Decile ', 1:10), bty='n', cex=.8)
+    legend('topleft', col=c(cols, 'black'), border='white', lty=1, lwd=2, legend=paste0('Decile ', 1:10), bty='n', cex=.8)
     print(plot.a4.dev)
     dev.off()
   }
@@ -388,12 +383,12 @@ for (i in 1:length(results)) {
   pf.cum.ex.rets[, i+1] <- cumsum(results[[i]]$pf.stats$rets)
 }
 
-cols.1 <- c('gray', 'blue', 'green', 'violet')
+cols.1 <- c('gray', cols)
 
 labels.x <- sapply(plot.dates, function(d) format(as.Date(d), '%m.%Y'))
 labels.x.at <- rev(seq(nrow(pf.cum.ex.rets), 1, by=-365))
-labels.y <- seq(-20, 20, by=0.5)
-labels.y.at <- seq(-20, 20, by=0.5)
+labels.y <- seq(-20, 20, by=0.25)
+labels.y.at <- seq(-20, 20, by=0.25)
 
 ylim <- c(min(pf.cum.ex.rets), max(pf.cum.ex.rets))
 ylim.dist <- ylim[2] - ylim[1]
@@ -402,7 +397,7 @@ matplot(pf.cum.ex.rets, type='l', xaxt='n', yaxt='n', ylab='', col=cols.1, main=
 axis(1, at=labels.x.at, labels=F)
 text(labels.x.at, par('usr')[3] - 0.05 * ylim.dist, labels=labels.x[labels.x.at], cex=.85, srt=45, adj=1, xpd=T)
 axis(2, at=labels.y.at, lab=paste0(labels.y * 100, '%'), las=TRUE, cex.axis=.85)
-legend('topleft', legend=c('Market portfolio', leg), col=cols.1, border='white', fill=cols.1, bty='n')
+legend('topleft', legend=c('Market portfolio', leg), col=cols.1, border='white', lty=1, lwd=2, bty='n')
 
 # save tex
 if (tex.output) {
@@ -411,7 +406,7 @@ if (tex.output) {
   axis(1, at=labels.x.at, labels=F)
   text(labels.x.at, par('usr')[3] - 0.06 * ylim.dist, labels=labels.x[labels.x.at], cex=.85, srt=45, adj=1, xpd=T)
   axis(2, at=labels.y.at, lab=paste0(labels.y * 100, '\\%'), las=TRUE, cex.axis=.85)
-  legend('topleft', legend=c('Market portfolio', leg), col=cols.1, border='white', fill=cols.1, bty='n', cex=.8)
+  legend('topleft', legend=c('Market portfolio', leg), col=cols.1, border='white', lty=1, lwd=2, bty='n', cex=.8)
   print(plot.a3.dev)
   dev.off()
 }
@@ -430,14 +425,13 @@ for (i in 1:length(results)) {
 par(mfrow=c(1,1))
 
 
-# Average excess return per decile [%]
+# Average return per decile [%]
 plot.2.data <- return.d2m(deciles.avg.rets) * 100
 
-matplot(plot.2.data, type='l', xaxs='i', main="Average return per decile [%]", xlab='Decile', ylab='', lwd=1, lty=1, xaxt='n', yaxt='n', col=cols, ylim=c(0, max(plot.2.data)))
-legend('topleft', legend=leg, col=cols, fill=cols, border='white', bty='n', cex=.8)
+matplot(plot.2.data, type='l', xaxs='i', main="Average return per decile [%]", xlab='Decile', ylab='', lwd=2, lty=lty, xaxt='n', yaxt='n', col=cols, ylim=c(0, max(plot.2.data)))
+legend('topleft', legend=leg, col=cols, border='white', bty='n', cex=.8, lty=lty)
 axis(1, at=1:10, labels=1:10, cex.axis=.85)
-axis(2, at=seq(0, 4, 0.5), lab=paste0(seq(0, 4, 0.5), '%'), las=TRUE, cex.axis=.85)
-
+axis(2, at=seq(0, 4, 0.4), lab=paste0(seq(0, 4, 0.4), '%'), las=TRUE, cex.axis=.85)
 
 
 # save tex
@@ -445,10 +439,10 @@ if (tex.output) {
   plot.c4.data <- return.d2m(deciles.avg.rets) * 100
   
   tikz(file=paste0(tex.dir, sample.name, '_avg_ret_per_decile.tex'), width=6, height=4)
-  plot.c4 <- matplot(plot.c4.data, type='l', xaxs='i', xlab='', ylab='', lwd=0.4, lty=1, xaxt='n', yaxt='n', col=cols, ylim=c(0, max(plot.c4.data)))
+  plot.c4 <- matplot(plot.c4.data, type='l', xaxs='i', xlab='', ylab='', lwd=2, lty=lty, xaxt='n', yaxt='n', col=cols, ylim=c(0, max(plot.c4.data)))
   axis(1, at=1:10, labels=1:10, cex.axis=.85)
-  axis(2, at=seq(0, 4, 0.5), lab=paste0(seq(0, 4, 0.5), '\\%'), las=TRUE, cex.axis=.85)
-  legend('topleft', legend=leg, col=cols, fill=cols, border='white', bty='n', cex=.8)
+  axis(2, at=seq(0, 4, 0.4), lab=paste0(seq(0, 4, 0.4), '\\%'), las=TRUE, cex.axis=.85)
+  legend('topleft', legend=leg, col=cols, lty=lty, lwd=2, border='white', bty='n', cex=.8)
   print(plot.c4)
   dev.off()
 }
@@ -487,7 +481,7 @@ return.d2m(coef(fit.1)['(Intercept)', 'Estimate'])
 
 
 # Decile betas 1 and 10
-par(mfrow=c(3, 1))
+par(mfrow=c(4, 1))
 
 for (i in 1:length(results)) {
   result <- results[[i]]
@@ -496,8 +490,8 @@ for (i in 1:length(results)) {
   ylim <- c(min(plot.data), max(plot.data))
   ylim.dist <- ylim[2] - ylim[1]
   
-  matplot(plot.data, type='l', xaxt='n', ylab='', xaxs='i', col=cols, lwd=0.5, lty=1, main=paste(leg[i], "average beta of deciles 1 and 10"), ylim=ylim)
-  legend('topleft', legend=c('Decile 1', 'Decile 10'), col=cols, fill=cols, bty='n', border='white')
+  matplot(plot.data, type='l', xaxt='n', ylab='', xaxs='i', col=cols, lwd=1, lty=1, main=paste(leg[i], "average beta of deciles 1 and 10"), ylim=ylim)
+  legend('topleft', legend=c('Decile 1', 'Decile 10'), col=cols, lty=1, lwd=2, bty='n', border='white')
   labels.x <- sapply(result$dates, function(d) format(as.Date(d), '%m.%Y'))
   labels.x.at <- rev(seq(nrow(plot.data), 1, by=-365))
   axis(1, at=labels.x.at, labels=F)
@@ -516,9 +510,9 @@ if (tex.output) {
     ylim <- c(min(plot.data), max(plot.data))
     ylim.dist <- ylim[2] - ylim[1]
     
-    tikz(file=paste0(tex.dir, sample.name, '_avg_beta_deciles_1_10_', result$label, '.tex'), width=5.5, height=3)
-    d.plot <- matplot(plot.data, type='l', xaxt='n', ylab='', xaxs='i', col=cols, lwd=0.5, lty=1, ylim=ylim)
-    legend('topleft', legend=c('Decile 1', 'Decile 10'), col=cols, fill=cols, bty='n', border='white', cex=.8)
+    tikz(file=paste0(tex.dir, sample.name, '_avg_beta_deciles_1_10_', result$label, '.tex'), width=5.5, height=2.8)
+    d.plot <- matplot(plot.data, type='l', xaxt='n', ylab='', xaxs='i', col=cols, lwd=1, lty=1, ylim=ylim)
+    legend('topleft', legend=c('Decile 1', 'Decile 10'), col=cols, lty=1, lwd=2, bty='n', border='white', cex=.8)
     labels.x <- sapply(result$dates, function(d) format(as.Date(d), '%m.%Y'))
     labels.x.at <- rev(seq(nrow(plot.data), 1, by=-365))
     axis(1, at=labels.x.at, labels=F)
@@ -601,14 +595,13 @@ if (tex.output) {
     tex.uni.pf <- gsub(paste0('R', result$texMarker, 'a2t'), format.t(pf.stats$capm.alpha.ttest), tex.uni.pf)
     
     # Sharpe ratios
-    tex.uni.pf <- gsub(paste0('SR', result$texMarker, '1'), sprintf('%.2f', sharpe.ratio(pf.stats$rets, result$ff$rf, 252)), tex.uni.pf)
+    tex.uni.pf <- gsub(paste0('SR_', result$texMarker, '_'), sprintf('%.2f', sharpe.ratio(pf.stats$rets, result$ff$rf, 252)), tex.uni.pf)
     
     
     ###################################
     # tpl_portfolio_characteristics.tex
     ###################################
     tex.pf.char <- read_file('tpls/tpl_portfolio_characteristics.tex')
-    tex.pf.char <- gsub('BEc', result$betaName, tex.pf.char)
     
     for (d in 1:10) {
       tex.pf.char <- gsub(paste0('RET', sprintf('%02d', d)), format.ret(return.d2m(ret.avg[d])), tex.pf.char)

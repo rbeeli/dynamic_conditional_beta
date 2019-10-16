@@ -10,13 +10,13 @@ if exist('isShellMode', 'var')
     fprintf(2, 'MAIN> Starting program in Shell mode... \n');
     
     % load stock excess returns data
-    returns = readtable('sp100_stock_ex_returns_demeaned_scaled.csv', 'ReadVariableNames',true);
+    returns = readtable('sp500_stock_ex_returns_demeaned_scaled.csv', 'ReadVariableNames',true);
     fprintf(2, 'MAIN> Returns data file read. \n');
 else
     fprintf(2, 'MAIN> Starting program in IDE mode... \n');
     
     % load stock excess returns data
-	returns = readtable('../../../0 data/CRSP/sp100_stock_ex_returns_demeaned_scaled.csv', 'ReadVariableNames',true);
+	returns = readtable('../../../0 data/CRSP/sp500_stock_ex_returns_demeaned_scaled.csv', 'ReadVariableNames',true);
     fprintf(2, 'MAIN> Returns data file read. \n');
 end
 
@@ -25,8 +25,8 @@ addpath(genpath('lib'));
 
 % estimation range
 windowSize = 1000;
-from = find(returns.date == '2013-12-31') + 1;
-to = size(returns, 1);
+from = find(returns.date == '1996-01-02');
+to = find(returns.date == '2013-12-31');
 steps = to - from + 1;
 memoryless = true;
 

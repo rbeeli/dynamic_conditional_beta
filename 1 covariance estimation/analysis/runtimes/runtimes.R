@@ -26,3 +26,21 @@ total_secs <- data.frame(runtime=secs <- secs / 98) # per stock
 
 stargazer(total_secs, type='text')
 stargazer(total_secs)
+
+
+
+
+log <- read_file('log_DCC1step_sp500_1000.txt')
+matches <- str_match_all(log, 'Elapsed time is ([0-9]+)\\.[0-9]+ seconds')[[1]]
+
+secs <- as.numeric(matches[, 2])
+
+total_secs <- data.frame(runtime=secs <- secs / 500) # per stock
+
+
+stargazer(total_secs, type='text')
+stargazer(total_secs)
+
+
+
+

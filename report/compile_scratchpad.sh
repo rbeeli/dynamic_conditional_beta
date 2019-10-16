@@ -1,1 +1,0 @@
-arara "scratchpad.tex"

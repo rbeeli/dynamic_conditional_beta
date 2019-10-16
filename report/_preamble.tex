@@ -1,0 +1,80 @@
+% packages
+\usepackage[paper=a4paper, left=4cm, right=3cm, top=3cm, bottom=3cm]{geometry} 
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs,makecell,graphicx,epstopdf,xcolor,color,amsmath,titlesec,cancel,tikz}
+\usepackage{upgreek,listings,color}
+\usepackage[absolute,overlay]{textpos}
+
+% content variables
+\input{_variables.tex}
+
+% PDF properties
+\usepackage[pdftex,
+            pdfauthor={\myAuthor},
+            pdftitle={\myTitle},
+            pdfsubject={Bachelor thesis},
+            pdfkeywords={\myKeywords},
+            pdfproducer={},
+            pdfcreator={}]{hyperref}
+            
+% link colors
+\hypersetup{colorlinks, linkcolor={black}, citecolor={blue!50!black}, urlcolor={blue!80!black}}
+
+% line spacing
+\usepackage[onehalfspacing,doublespacing]{setspace}
+
+% first line indention
+\setlength{\parindent}{0cm}
+
+% bibliography
+\usepackage{apacite}
+\bibliographystyle{apacite}
+
+
+% section titles format
+\titlespacing*{\section}{0pt}{0ex}{0ex}
+\titlespacing*{\subsection}{0pt}{0ex}{-1ex}
+\titlespacing*{\subsubsection}{0pt}{0ex}{-1ex}
+
+% footnotes format
+\usepackage[bottom,hang,flushmargin]{footmisc}
+\renewcommand{\hangfootparskip}{0ex}
+\renewcommand{\hangfootparindent}{1em}
+
+% list of figures format
+\makeatletter
+\renewcommand*\l@figure{\@dottedtocline{1}{0em}{2.3em}} % Default: 1.5em/2.3em
+\let\l@table\l@figure
+\makeatother
+
+% captions format
+\usepackage{float,threeparttable}
+\usepackage[labelfont=bf]{caption}
+
+% code synatax highlighting format (listings package)
+\lstset{ 
+  backgroundcolor=\color{white},
+  basicstyle=\ttfamily\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true                  % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+}
+
+
+
+% custom commands
+\newcommand{\PLACEHOLDER}{\textbf{\textcolor{red}{XXXX}}}
+\newcommand{\REVISE}[1]{\textbf{\textcolor{orange}{#1}}}
+\newcommand{\VAR}[0]{\textrm{Var}}
+\newcommand{\COV}[0]{\textrm{Cov}}
+\newcommand{\EE}[0]{\textrm{E}}
+\newcommand{\PP}[0]{\textrm{P}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+%\newcommand{\TBLIMP}[1]{}
+\newcommand{\TBLIMP}[1]{\input{#1}}
+
+%\newcommand{\FIGIMP}[1]{}
+\newcommand{\FIGIMP}[1]{\input{#1}}

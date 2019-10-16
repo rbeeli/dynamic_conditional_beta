@@ -4,12 +4,7 @@
 % arara: pdflatex
 
 \documentclass[11pt,a4paper]{article}
-\input{preamble.tex}
-
-% sample
-\def \indexName {S\&P 500}
-\def \periodFrom {January 1996}
-\def \periodTo {December 2013}
+\input{_preamble.tex}
 
 
 
@@ -18,48 +13,23 @@
 %% --------------------------------------------------
 %% Title page
 %% --------------------------------------------------
-\input{titlepage.tex}
-
-
-
-
-
-
-%% --------------------------------------------------
-%% Executive summary
-%% --------------------------------------------------
-\section*{Executive Summary}
-
-\begin{doublespacing}
-
-This is the executive summary, intended to give the reader a short and condensed overview of the thesis. The summary should give an overview over the whole thesis, including the results.
-
-\textcolor{red}{\textit{Requirements}: Auf maximal drei Seiten die wesentlichen Aspekte (Problemstellung, Vorgehen, Resultate und allgemeine Beurteilung) der Arbeit aufzeigt.}
-
-\end{doublespacing}
-
-
-
-
-
+\input{sec_titlepage.tex}
 
 
 %% --------------------------------------------------
 %% Abstract
 %% --------------------------------------------------
-\newpage
 \section*{Abstract}
-
 \begin{doublespacing}
-
-\textcolor{red}{Abstract.}
-
+\input{sec_abstract_text.tex}
 \end{doublespacing}
 
 
-
-
-
+%% --------------------------------------------------
+%% Executive summary
+%% --------------------------------------------------
+\newpage
+\input{sec_executive_summary.tex}
 
 
 %% --------------------------------------------------
@@ -89,21 +59,20 @@ This is the executive summary, intended to give the reader a short and condensed
 \section{Introduction}
 %% --------------------------------------------------
 
-The beta measure was introduced by the renowned Capital Asset Pricing Model (CAPM) of \citeA{WS:64} and \citeA{JL:65}. It is a cornerstone in asset pricing theory and still widely used in practice, despite earning a lot of critique because of its poor empirical performance.
+The beta measure was introduced by the renowned Capital Asset Pricing Model (CAPM) of \citeA{WS:64} and \citeA{JL:65}. It is a cornerstone in asset pricing theory and still widely used in practice, despite earning a lot of critique because of its poor empirical performance. The measure is the sensitivity of the security returns to changes in the market portfolio returns. The traditional estimation method uses ordinary least squares (OLS) for estimating a linear regression of security excess returns against market excess returns, resulting in an unconditional beta coefficient. The economic intuition behind the CAPM is attractive and easily understood, but \citeA{FF:04} showcase poor empirical performance of the model compared to the expectations of the theoretical framework.
 
-Beta creates a linear relationship between the expected returns of a security and the market portfolio returns. The resulting measure is the sensitivity of the security returns to changes in the market portfolio returns. The traditional estimation method uses ordinary least squares (OLS) for estimating a linear regression of security excess returns against market excess returns, resulting in an unconditional beta coefficient. The economic intuition behind the CAPM is attractive and easily understood, but \citeA{FF:04} showcase poor empirical performance of the model compared to the expectations of the theoretical framework.
+More advanced estimation methods which account for heteroscedasticity, volatility-clustering and time-dependency exist, e.g. GARCH-based models. \citeA{BET:16} estimate stock betas using a time-varying conditional correlation model in conjunction with a GARCH model, also called DCC-GARCH, which was introduced by \citeA{EN:02}. It is supposed to have a significant positive relation to the cross section of daily stock returns. A market neutral investment strategy taking a long position in stocks of the highest conditional beta decile and a short position in stocks of the lowest conditional beta decile is supposed to yield monthly excess returns and alphas in the range of 0.60\% to 0.80\%.
 
-More advanced estimation methods which account for heteroscedasticity, volatility-clustering and time-dependency exist, e.g. GARCH-based models. \citeA{BET:16} estimate beta using a time-varying conditional correlation model in conjunction with a GARCH model, also called DCC-GARCH. It is supposed to have a significant positive relation to the cross-section of daily stock returns. A market neutral investment strategy taking a long position in stocks of the highest conditional beta decile and a short position in stocks of the lowest conditional beta decile is supposed to yield an alpha in the range of $0.60\%$ to $0.80\%$ per month ($0.25\%$ to $0.48\%$ per month by incorporating daily transaction costs).
+\citeA{PAP:15} developed the more realistic, statistically advanced COMFORT model, which allows to model all major stylized facts of financial returns, including volatility clustering, dynamics in the dependency structure, asymmetry, and heavy tails. It supports various extensions which account for time-varying correlation dynamics and a hybrid GARCH-SV extension for modeling shocks across assets, which are an additional source of dynamics in the correlations.
 
-\citeA{PAP:15} developed the more realistic, statistically advanced COMFORT-DCC model, which allows to model all major stylized facts of financial returns, including volatility clustering, dynamics in the dependency structure, asymmetry, and heavy tails. It supports various extensions which account for correlation dynamics, time-varying and time-invariant. Moreover, the hybrid GARCH-SV extension enables to model shocks across assets, which are an additional source of dynamics in the correlations.
+This thesis replicates in a first step the empirical study conducted by \citeA{BET:16}. We use their Gaussian DCC-GARCH construct with daily stock returns data and focus on Long-Short strategy returns for comparison. In a second step, the DCC-GARCH construct is replaced with the COMFORT model. The COMFORT-DCC model used throughout this thesis uses a fat-tailed, multivariate asymmetric Laplace distribution (MALap) in conjunction with the Dynamic Conditional Correlation model of \citeA{ES:01} for the correlation dynamics; the hybrid GARCH-SV extension is not employed. The ability of the COMFORT-DCC model to capture more stylized facts of financial asset returns compared to the DCC-GARCH model gives us the hope and expectation of more significant beta estimates and a significantly better performance of the investment strategy, namely lower risk with equal and/or higher returns.
 
-This thesis replicates the empirical study conducted by \citeA{BET:16}. We use their Gaussian DCC-GARCH construct with daily stock returns data and focus on Long-Short strategy results for comparison. Subsequently, the DCC-GARCH filter is replaced with the COMFORT-DCC model, with the hope and expectation of more significant beta estimations, resulting in a significantly better performance of the investment strategy, namely lower risk with equal and/or higher returns. The COMFORT-DCC model used throughout this thesis uses a fat-tailed, multivariate asymmetric Laplace distribution (MALap) in conjunction with the Dynamic Conditional Correlation model of \citeA{ES:01} for the correlation dynamics; the hybrid GARCH-SV extension is not employed.
+We estimate stock betas for all \indexName{} index constituents for each day using a moving window. The sample data covers the period from \periodFrom{} to \periodTo{}. Based on the estimated betas, we predict the cross-section of stock returns and analyze the findings based on decile portfolios. Stocks in the lowest beta decile are expected to have significantly lower returns on the next trading day compared to stocks in the highest beta decile. This hypothesis is tested using a High-Low difference portfolio consisting of a long position in the highest-beta decile and a short position in the lowest-beta decile. Moreover, these portfolios serve as a vehicle to compare the performance of the DCC-GARCH and COMFORT-DCC model, which is the second objective of this thesis.
 
-Beta measures for all \indexName{} index components are estimated each day using a moving window. The sample data covers the period from \periodFrom{} to \periodTo{}. Based on the calculated betas, decile portfolios are formed in order to predict one-step-ahead returns. Stocks in the lowest beta decile should have significantly lower returns on the next trading day compared to the stocks in the highest beta decile. This hypothesis is tested using a high-low portfolio consisting of a long position in the highest-beta decile and a short position in the lowest-beta decile. These portfolios also serve as a vehicle to compare the performance of the DCC-GARCH and COMFORT model.
+The remainder of this thesis is structured as follows. Section 2 provides general definitions for unconditional and conditional beta measures. Section 3 presents the methodology used to conduct this study. Section 4 states model specifications for the CAPM, DCC-GARCH and COMFORT-DCC models, including remarks on the estimation procedure. Section 5 presents the findings of our empirical study---it shows the results of our replication of \citeA{BET:16}, and it compares the performance of DCC-GARCH with COMFORT-DCC. Section 6 concludes the findings and provides possible explanations and context thereof. The appendix contains useful statistics and figures of our empirical findings; model estimation runtimes for DCC-GARCH and COMFORT-DCC are provided.
 
-The findings of our empirical study do not confirm the conclusions drawn by \citeA{BET:16}. Our equal-weighted portfolios perform substantially worse than theirs. The portfolio and firm characteristics do not show a similar pattern. We are able to generate alpha returns by using value-weighted portfolios, but this method deviates from the method used by \citeA{BET:16}. Moreover, our empirical data provide no evidence for demonstrating superior performance of the COMFORT-DCC model compared to the DCC-GARCH model, which is the second objective of this thesis; the results are inconclusive.
 
-The remainder of this thesis is structured as follows. Section 2 provides definitions for variations of the beta measure. Section 3 presents data definitions. Section 4 states model specifications for the CAPM, DCC-GARCH and COMFORT-DCC models, including remarks on the exact estimation procedure. Section 5 presents the findings of our empirical study. It shows the results of our attemt to replicate the results of \citeA{BET:16} and it compares the performance of DCC-GARCH with COMFORT-DCC. Section 6 concludes the findings and provides possible explanations and context. The Appendix contains useful supplemental statistics and figures; estimation runtimes for DCC-GARCH and COMFORT-DCC are provided.
+
 
 
 
@@ -115,15 +84,15 @@ The remainder of this thesis is structured as follows. Section 2 provides defini
 
 \subsection{Beta Measure}
 
-The beta measure ($\beta$) creates a linear relationship between the expected returns of a security and the expected market portfolio returns. The resulting measure is the sensitivity of the security returns to changes in market portfolio returns, whereas the market portfolio has a beta of 1 by definition.
+The beta measure ($\beta$) creates a linear relationship between the expected returns of a stock and the expected market portfolio returns. The resulting measure is the sensitivity of the stock returns to changes in market portfolio returns. The beta of the market is 1 by definition. If a stock moves on average less than the market typically does, the stock's beta will be smaller than 1. On the other hand, if a stock moves more than the market typically does, the stock's beta will be greater than 1. In other words, the higher the beta, the higher the volatility of the corresponding stock.
 
 \subsection{Unconditional Beta} \label{unconditional_beta}
 
 The unconditional CAPM beta creates a linear relationship of the form
 \begin{equation}
-    \EE[ R_{i} ] - \EE[ R_{f} ] = \beta_i ( \EE[ R_{m} ] - \EE[ R_{f} ] ),
+    \EE[R_{i}] - \EE[ R_{f} ] = \beta_i ( \EE[ R_{m} ] - \EE[ R_{f} ] ),
 \end{equation}
-where $\EE[ R_{i} ]$ denotes the expected return of the asset $i$, $\EE[ R_{f} ]$ - the expected risk-free rate with a beta of zero by definition, and $\EE[ R_{m} ]$ denotes the expected market portfolio return. Unconditional in this context means that the CAPM beta does not vary within the estimation period, it is constant.
+where $\EE[R_{i}]$ denotes the expected return of the asset $i$, $\EE[R_{f}]$ -- the expected risk-free rate with a beta of zero by definition, and $\EE[R_{m}]$ -- the expected market portfolio return. Unconditional in this context means that the CAPM beta does not vary within the estimation period, it is constant.
 
 
 
@@ -134,7 +103,7 @@ The assumption of a firm having a constant beta over the estimation period seems
 \begin{equation}
 \EE[R_{i,t+1} - R_{f,t+1} \mid \Omega_t] = \EE[\beta_{i,t+1} \mid \Omega_t] \cdot \EE[R_{m,t+1} - R_{f,t+1} \mid \Omega_t]
 \end{equation}
-where $\Omega_t$ denotes the information set available at time $t$ about future returns and betas, $\EE[R_{i,t+1} - R_{f,t+1} \mid \Omega_t]$ and $\EE[R_{m,t+1} - R_{f,t+1}  \mid \Omega_t]$ are the expected excess returns of the risky asset $i$ and the market portfolio at time $t+1$, conditional on the information set at time $t$. $\EE[\beta_{i,t+1} \mid \Omega_t]$ is the expected conditional beta measure of asset $i$ at time $t$, conditional on the information set available at $t$, given by
+where $\Omega_t$ denotes the information set available at time $t$ about future returns and betas, $\EE[R_{i,t+1} - R_{f,t+1} \mid \Omega_t]$ and $\EE[R_{m,t+1} - R_{f,t+1} \mid \Omega_t]$ are the expected excess returns of the risky asset $i$ and the market portfolio at time $t+1$, conditional on the information set at time $t$. $\EE[\beta_{i,t+1} \mid \Omega_t]$ is the expected conditional beta measure of asset $i$ at time $t$, conditional on the information set available at $t$, given by
 \begin{equation}
     \EE[\beta_{i,t+1} \mid \Omega_t] = \dfrac{ \COV[ R_{i,t+1} - R_{f,t+1}, R_{m,t+1} - R_{f,t+1} \mid \Omega_t ] }{ \VAR[ R_{m,t+1} - R_{f,t+1} \mid \Omega_t ]  }.
 \end{equation}
@@ -151,9 +120,9 @@ where $\Omega_t$ denotes the information set available at time $t$ about future 
 \section{Methodology}
 %% --------------------------------------------------
 
-\subsection{Stocks Data Sample}
+\subsection{Data Sample}
 
-The sample dataset covers all components of the \indexName{} stock market index. The time period used by \citeA{BET:16} ranges from July 1963 to December 2013, but we use a shorter time period ranging from \periodFrom{} to \periodTo{} because of constraints in computation time. The period covers bear as well as bull markets and the financial crisis of 2008, which is especially important for testing the model's ability to incorporate shocks into (co-)variance predictions. In accordance with \citeA{BET:16}, daily stock returns including dividends of all \indexName{} constituents were obtained from the Center for Research in Security Prices (CRSP) database. The daily market returns and risk-free rates used for excess-returns calculation were extracted from Kenneth French's Data Library (\citeA{KFD:18}).
+The sample dataset includes all constituents of the \indexName{} stock market index. The time period used by \citeA{BET:16} ranges from July 1963 to December 2013, but we use a shorter time period ranging from \periodFrom{} to \periodTo{} because of constraints in computation time. The WRDS API data query is provided in Appendix \ref{sec:appendix:wrds_query}. The period covers bear as well as bull markets and the financial crisis of 2008, which is especially important for testing the model's ability to incorporate shocks into (co-)variance predictions. In accordance with \citeA{BET:16}, daily stock returns including dividends of all \indexName{} constituents were obtained from the Center for Research in Security Prices (CRSP) database. The daily market returns and risk-free rates used for excess-returns calculation were extracted from Kenneth French's Data Library (\citeA{KFD:18}).
 
 
 
@@ -163,7 +132,7 @@ A return is the change in the total value of a security over some period of time
 \begin{equation}
     R_t = \dfrac{P_t \cdot f(t) + d(t)}{P_{t-1}} - 1,
 \end{equation}
-where $P_t$ denotes the current price of the stock, $P_{t-1}$ the previous time period price of the stock, $f(t)$ represents a price adjustment factor at time $t$, and $d(t)$ denotes cash adjustments at time $t$. It is important to realize that calculating returns based on prices only without accounting for necessary adjustments like dividends or stock splits can cause jumps in the price time series, which ultimately induces a bias into further calculations.
+where $P_t$ denotes the current price of the stock, $P_{t-1}$ -- the previous time period price of the stock, $f(t)$ represents a price adjustment factor at time $t$, and $d(t)$ denotes cash adjustments at time $t$. It is important to realize that calculating returns based on prices only without accounting for necessary adjustments like dividends or stock splits can cause jumps in the price time series, which ultimately induces a bias into further calculations.
 
 If a company gets delisted on day $t$, we incorporate the delisting return $R_t^\textrm{del}$ into its last trading day return $R_t$ via a compounded return calculation given by
 \begin{equation}
@@ -197,7 +166,7 @@ Applying this ruleset to the  \indexName{} sample from \periodFrom{} to \periodT
 
 Logarithmic returns are commonly used by practitioners in finance because of attractive properties like time additivity, log-normality, stable distribution, approximate raw-log equality, etc., but these advantages are less pronounced in shorter time periods, e.g. daily- or hourly time spans (\citeA{HUDSON:15}); we use daily returns throughout this thesis. In contrast to log-returns, simple returns possess the linear additivity property across portfolio components.
 
-The paper of \citeA{BET:16} uses the equity beta in the context of the Capital Asset Pricing Model (see section \ref{unconditional_beta}), which creates a linear relationship between excess returns and risk.The derivation of the CAPM is based on expected portfolio returns formed as the weighted average of asset returns, implying linear additivity of portfolio components. Log-returns are unsuitable in this context because they are not linearly additive and, furthermore, beta estimates based on log-returns systematically differ from those calculated using simple returns (\citeA{HUDSON:15}). In conclusion, we choose simple returns over log-returns for our analysis because it's the appropriate measure in the CAPM context.
+The paper of \citeA{BET:16} uses the equity beta in the context of the Capital Asset Pricing Model (see section \ref{unconditional_beta}), which creates a linear relationship between excess returns and risk. The derivation of the CAPM is based on expected portfolio returns formed as the weighted average of asset returns, implying linear additivity of portfolio components. Log-returns are unsuitable in this context because they are not linearly additive and, furthermore, beta estimates based on log-returns systematically differ from those calculated using simple returns (\citeA{HUDSON:15}). In conclusion, we choose simple returns over log-returns for our analysis because it's the appropriate measure in the CAPM context.
 
 
 
@@ -216,9 +185,46 @@ This does not affect our beta-estimate $\hat{\beta}_{i}$, which is equivalent to
 
 
 
+
+
+\subsection{Portfolio Returns Calculation} \label{section:pf_returns_calculation}
+
+This section defines how the average returns of equal-weighted, value-weighted and High-Low portfolios are calculated, and corresponds to \citeA{BEM:16}.
+
+
+\subsubsection{Equal-Weighted Portfolio Returns}
+
+The average equal-weighted portfolio return $R_{\textit{pf},d}^{\textrm{eq}}$ at day $d$ is simply the arithmetic mean of all returns of the portfolio components:
+\begin{equation}
+    R_{\textit{pf},d}^{\textrm{eq}} = \frac{1}{N} \sum\limits_{i=1}^N R_{i,d},
+\end{equation}
+where $N$ denotes the number of portfolio components, and $R_{i,d}$ denotes the return of the portfolio component $i$ at day $d$.
+
+
+\subsubsection{Value-Weighted Portfolio Returns}
+
+The average value-weighted portfolio return $R_{\textit{pf},d}^{\textrm{vw}}$ at day $d$ uses the market capitalization of the firm as weighting:
+\begin{equation}
+    R_{\textit{pf},d}^{\textrm{vw}} = \dfrac{ \sum\limits_{i=1}^N V_{i,d-1} \cdot R_{i,d} }{ \sum\limits_{i=1}^N V_{i,d-1} },
+\end{equation}
+where $N$ denotes the number of portfolio components, $R_{i,d}$ denotes the return of the portfolio component $i$ at day $d$, and $V_{i,d-1}$ denotes the market capitalization of firm $i$ at day $d-1$.
+
+
+\subsubsection{High-Low Beta Portfolio Returns}
+
+The High-Low beta portfolio return $R_{pf,d}^{\textrm{hl}}$ at day $d$ is the equal-weighted average return of going long in the highest-beta decile portfolio and short in the lowest-beta decile portfolio:
+\begin{equation}
+    R_{pf,d}^{\textrm{hl}} = R_{\textit{pf},d}^{\textrm{highest}} - R_{\textit{pf},d}^{\textrm{lowest}},
+\end{equation}
+where $R_{\textit{pf},d}^{\textrm{highest}}$ denotes the average return of the highest-beta decile portfolio, and $R_{\textit{pf},d}^{\textrm{lowest}}$ denotes the average return of the lowest-beta portfolio. Note that the decile portfolios can either be equal- or value-weighted.
+
+
+
+
+
 \subsection{Covariance Smoothing}
 
-Our main findings for the DCC-GARCH and COMFORT-DCC models are based on smoothed (co-)variances in order to reduce the effects of noise and numerical optimization errors (e.g. local optima). We use an Exponentially Weighted Moving Average (EWMA) to smooth (co-)variance estimates, given by
+Our findings for the DCC-GARCH and COMFORT-DCC models are based on smoothed (co-)variances in order to reduce the effects of noise and numerical optimization errors (e.g. local optima). We use an Exponentially Weighted Moving Average (EWMA) to smooth (co-)variance estimates, given by
 \begin{equation}
 S_t = \begin{cases}
  Y_1,                                           & t = 1 \\
@@ -227,11 +233,15 @@ S_t = \begin{cases}
 \end{equation}
 where $\alpha = 2/(n+1)$ denotes the degree of weighting decrease for decreasing $t$, $Y_t$ denotes the estimated covariance at day $t$ and $n$ denotes the window size (look-back time steps). The use of an EWMA does not introduce a look-ahead bias, the value calculated at day $t$ only uses data within the sample window ranging from day $t - n + 1$ to day $t$.
 
-$n$ is chosen so that it maximizes risk-adjusted High-Low portfolio returns for the DCC-GARCH and COMFORT-DCC model. The Sharpe ratio is used as maximization criteria, given by
+We choose $n$ so that it maximizes risk-adjusted High-Low portfolio returns for the DCC-GARCH and COMFORT-DCC model. The Sharpe ratio is used as maximization criteria, given by
 \begin{equation}
 	SR = \dfrac{\EE[R_{pf} - R_f]}{\sqrt{\VAR[R_{pf} - R_f]}}.
 \end{equation}
-Sharpe ratio maximization yields the highest portfolio returns for a window size of $n=7$.
+Maximizing the Sharpe ratio yields a window size of $n=7$.
+
+
+
+
 
 %% --------------------------------------------------
 \newpage
@@ -247,7 +257,7 @@ Considering a time series linear regression, the CAPM model takes the form given
 \begin{equation}
 Z_{i,t} = \alpha_i + \beta_i\ Z_{m,t} + \epsilon_{i,t},
 \end{equation}
-where $Z_{i,t}$ denotes the excess return of stock $i$ at day $t$, $\alpha_i$ denotes the constant linear regression intercept, $\beta_i$ - the unconditional beta measure of stock $i$, $Z_{m,t}$ - the market excess return and $\epsilon_{i,t}$ is the error term.
+where $Z_{i,t}$ denotes the excess return of stock $i$ at day $t$, $\alpha_i$ denotes the constant linear regression intercept, $\beta_i$ -- the unconditional beta measure of stock $i$, $Z_{m,t}$ -- the market excess return, and $\epsilon_{i,t}$ is the error term.
 
 
 \subsubsection{Estimation}
@@ -260,48 +270,44 @@ Ordinary least squares (OLS) method is used for estimating the beta coefficient.
 
 \subsection{DCC-GARCH}
 
-\citeA{BET:16} use the Dynamic Conditional Correlation (DCC) model introduced by \citeA{ES:01} to estimate the covariance between each stock and the market portfolio returns for their main findings. It belongs to the class of models with conditional variances and conditional correlations, hence time-varying. The idea behind DCC is that the covariance matrix can be decomposed into conditional standard deviations and conditional correlations. DCC uses a two-step estimation procedure. In the first step, the conditional variance for each asset is estimated via an univariate GARCH model. In the second step, the residuals from the univariate models are used to estimate the time-varying correlation matrix. This approach is computationally more efficient compared to multivariate GARCH approaches, because the number of parameters in the correlation process subject to estimation is independent of the number of series to be correlated. Thus, potentially large correlation matrices can be estimated, making the DCC-GARCH model highly attractive to practitioners in finance.
+\citeA{BET:16} use the Dynamic Conditional Correlation (DCC) model introduced by \citeA{ES:01} to estimate the covariance between each stock and the market portfolio returns for their main findings. It belongs to the class of models with conditional variances and conditional correlations, hence time-varying. The idea behind DCC is that the covariance matrix can be decomposed into conditional standard deviations and conditional correlations. DCC uses a two-step estimation procedure. In the first step, the conditional variance for each asset is estimated via a univariate GARCH model. In the second step, the residuals from the univariate models are used to estimate the time-varying correlation matrix. This approach is computationally more efficient compared to multivariate GARCH approaches, because the number of parameters in the correlation process subject to estimation is independent of the number of series to be correlated. Thus, potentially large correlation matrices can be estimated, making the DCC-GARCH model highly attractive to practitioners in finance.
 
 
 
 \subsubsection{Definition}
 
-The following definitions closely follow \citeA{BET:16}.
-
-The stationary excess return time series are given by
+The following definitions closely follow \citeA{BET:16}. The stationary excess return time series are given by
 \begin{equation}
     R_{i,d+1} - R_{f,d+1} = \alpha_0^i + \epsilon_{i,d+1} = \alpha_0^i + \sigma_{i,d+1} \cdot u_{i,d+1}
 \end{equation}
 \begin{equation}
     R_{m,d+1} - R_{f,d+1} = \alpha_0^m + \epsilon_{m,d+1} = \alpha_0^m + \sigma_{m,d+1} \cdot u_{m,d+1},
 \end{equation}
-where $R_{i,d+1} - R_{f,d+1}$ and $R_{m,d+1} - R_{f,d+1}$ denote the excess return at day $(d+1)$ of stock $i$ and the market portfolio, respectively. $u_{i,d+1} = \epsilon_{i,d+1} / \sigma_{i,d+1}$ and $u_{m,d+1} = \epsilon_{m,d+1} / \sigma_{m,d+1}$ denote the standardized residuals for stock $i$ and the market portfolio, respectively.
+where $R_{i,d+1} - R_{f,d+1}$ and $R_{m,d+1} - R_{f,d+1}$ denote the excess return at day $(d+1)$ of stock $i$ and the market portfolio, respectively, and $u_{i,d+1} = \epsilon_{i,d+1} / \sigma_{i,d+1}$ and $u_{m,d+1} = \epsilon_{m,d+1} / \sigma_{m,d+1}$ denote the standardized residuals for stock $i$ and the market portfolio, respectively.
 
-The variances $\sigma_{i,d+1}^2$ and $\sigma_{m,d+1}^2$ of the excess return time series are modeled using univariate GARCH(1,1) specifications and equal the squared error terms $\epsilon_{i,d+1}^2$ and $\epsilon_{m,d+1}^2$ because their mean is zero:
+The variances $\sigma_{i,d+1}^2$ and $\sigma_{m,d+1}^2$ of the excess return time series are modeled using univariate GARCH(1,1) specifications and equal the squared error terms $\epsilon_{i,d+1}^2$ and $\epsilon_{m,d+1}^2$, because their mean is zero:
 \begin{equation}
-    \EE_d[\epsilon_{i,d+1}^2] \equiv \sigma_{i,d+1}^2 = \beta_0^i + \beta_1^i \sigma_{i,d}^2 u_{i,d}^2 + \beta_2^i \sigma_{i,d}^2
+    \EE[\epsilon_{i,d+1}^2 \mid \Omega_d] \equiv \sigma_{i,d+1}^2 = \beta_0^i + \beta_1^i \sigma_{i,d}^2 u_{i,d}^2 + \beta_2^i \sigma_{i,d}^2
 \end{equation}
 \begin{equation} \label{eq:DCC_variance_market}
-    \EE_d[\epsilon_{m,d+1}^2] \equiv \sigma_{m,d+1}^2 = \beta_0^m + \beta_1^m \sigma_{m,d}^2 u_{m,d}^2 + \beta_2^m \sigma_{m,d}^2,
+    \EE[\epsilon_{m,d+1}^2 \mid \Omega_d] \equiv \sigma_{m,d+1}^2 = \beta_0^m + \beta_1^m \sigma_{m,d}^2 u_{m,d}^2 + \beta_2^m \sigma_{m,d}^2,
 \end{equation}
-where $\EE_d$ denotes the expectation operator conditional on day $d$ information. $\sigma_{i,d+1}^2$ is the expected conditional variance of stock $i$ at day $d$, $\sigma_{m,d+1}^2$ is the expected conditional variance of the market portfolio at day $d$.
+where $\sigma_{i,d+1}^2$ denotes the expected conditional variance of stock $i$ at day $d$, and $\sigma_{m,d+1}^2$ denotes the expected conditional variance of the market portfolio at day $d$.
 
-The Dynamic Conditional Correlation model uses Pearson's correlation coefficient, conditioned on the information available at day $d$ (\citeA{EN:02}). Thus, the covariance $\sigma^2_{im,d+1}$ between stock $i$ and the market portfolio excess returns is given by
+The Dynamic Conditional Correlation model uses Pearson's correlation coefficient, conditioned on the information set $\Omega_d$ available at day $d$ (\citeA{EN:02}). Thus, the covariance $\sigma^2_{im,d+1}$ between stock $i$ and the market portfolio excess returns is given by
 \begin{equation} \label{eq:DCC_covariance}
-    \EE_d[\epsilon_{i,d+1} \epsilon_{m,d+1}] \equiv \sigma_{im,d+1} =  \rho_{im,d+1} \cdot \sigma_{i,d+1} \cdot \sigma_{m,d+1},
+    \EE[\epsilon_{i,d+1} \epsilon_{m,d+1} \mid \Omega_d] \equiv \sigma_{im,d+1} =  \rho_{im,d+1} \cdot \sigma_{i,d+1} \cdot \sigma_{m,d+1},
 \end{equation}
 with
 \begin{equation}
 \begin{split}
     \rho_{im,d+1} &= \dfrac{q_{im,d+1}}{\sqrt{q_{ii,d+1} \cdot q_{mm,d+1}}} \\
-    q_{im,d+1} &= \overline{\rho}_{im} + a_1(u_{i,d} \cdot u_{m,d} - \overline{\rho}_{im}) + a_2(q_{im,d} - \overline{\rho}_{im}),
+    q_{im,d+1} &= \overline{\rho}_{im} + a_1(u_{i,d} \cdot u_{m,d} - \overline{\rho}_{im}) + a_2(q_{im,d} - \overline{\rho}_{im}) \\
+    q_{ii,d+1} &= (1 - a_1 - a_2) + a_1 \cdot u_{i,d}^2 + a_2 \cdot q_{ii,d} \\
+    q_{mm,d+1} &= (1 - a_1 - a_2) + a_1 \cdot u_{m,d}^2 + a_2 \cdot q_{mm,d} ,
 \end{split}
 \end{equation}
-where $\rho_{im,d+1}$ denotes the expected conditional correlation. Based on the GARCH(1,1) model residuals of $R_{i,d+1} - R_{f,d+1}$ and $R_{m,d+1} - R_{f,d+1}$
- 
- $q_{im,d+1}$ denotes the covariance of $R_{i,d+1} - R_{f,d+1}$ and $R_{m,d+1} - R_{f,d+1}$ using the previously defined GARCH(1,1) model residuals. $q_{ii,d+1}$ and $q_{mm,d+1}$
-
- $\overline{\rho}_{im}$ is the unconditional correlation. $a_1$ and $a_2$ are GARCH(1,1) model parameters of the correlation process.
+where $\rho_{im,d+1}$ denotes the expected conditional correlation, $\overline{\rho}_{im}$ denotes the unconditional correlation, $q_{im,d+1}$ denotes the covariance, $q_{ii,d+1}$ and $q_{mm,d+1}$ denote the variance of stock $i$ and the market portfolio, respectively, and $a_1$ and $a_2$ are GARCH(1,1) model parameters of the correlation process.
 
 
 
@@ -310,9 +316,8 @@ where $\rho_{im,d+1}$ denotes the expected conditional correlation. Based on the
 
 The DCC beta, analogously to the unconditional CAPM beta, is given by the ratio of the variables defined in (\ref{eq:DCC_covariance}) and (\ref{eq:DCC_variance_market}):
 \begin{equation}
-    BETA_{i,d+1}^{\textrm{DCC}} = \dfrac{\sigma_{im,d+1}}{\sigma_{m,d+1}^2}.
+    \beta_{i,d+1}^{\textrm{DCC}} = \dfrac{\sigma_{im,d+1}}{\sigma_{m,d+1}^2}.
 \end{equation}
-
 
 
 \subsubsection{Estimation}
@@ -323,19 +328,19 @@ Consequently, we choose a bivariate estimation, i.e. we estimate the covariance 
 
 \citeA{BET:16} use correlation targeting to ease optimization convergence with the parameters $a_1$ and $a_2$, and assume time-varying correlations mean reverting to the unconditional sample correlation $\overline{\rho}_{im}$, which requires $a_1 + a_2 < 1$ to hold.\footnote{Maximum Likelihood Estimation of the DCC-GARCH model is described in Appendix I of $\citeA{BET:16}$.}
 
+In order to compare the DCC-GARCH and COMFORT-DCC models better, we also estimate the DCC-GARCH model using a window size of 1000 days.
+
+
 
 
 \subsection{COMFORT-DCC}
 
-\citeA{PAP:15} developed the statistically advanced COMFORT-DCC model which allows to model all major stylized facts of financial returns, including volatility clustering, dynamics in the dependency structure (correlation), asymmetry, and heavy tails. It supports various extensions which account for correlation dynamics, time-varying and time-invariant. Moreover, the hybrid GARCH-SV extension enables to model shocks across assets, which are an additional source of dynamics in the correlations.
+The COMFORT-DCC model allows to model various stylized facts of financial returns, including volatility clustering, dynamics in the dependency structure, and the asymmetry and heavy tails of financial returns distributions. The hybrid GARCH-SV extension allows to model shocks across assets, which are an additional source of dynamics in the correlations.
 
 
 \subsubsection{Definition}
 
-An earlier definition of the COMFORT model using constant conditional correlation dynamics is available in \citeA{PAP:15}. The DCC extension which allows the dependency matrix to vary over time is described in \citeA{PAP:15.1}.
-
-The COMFORT setting in this thesis uses the fat-tailed, multivariate asymmetric Laplace distribution (MALap) in conjunction with the Dynamic Conditional Correlation model of \citeA{ES:01} for the correlation dynamics. We do not use the hybrid GARCH-SV extension since it would not provide a notable benefit in a bivariate estimation setting.
-
+A definition of the COMFORT model, which allows the dependency matrix to vary over time (DCC), is described in \citeA{PAP:15.1}. The COMFORT-DCC setting in this thesis uses the fat-tailed, multivariate asymmetric Laplace distribution (MALap) in conjunction with the DCC model of \citeA{ES:01} for the correlation dynamics. The multivariate asymmetric Laplace (MALap) distribution is a limiting case of the multivariate generalized hyperbolic (MGHyp) distribution, see \citeA{QRM:15} and \citeA{KOTZ:01}. We do not employ the hybrid GARCH-SV extension, since it would not provide a notable benefit in our bivariate estimation setting.
 
 
 \subsubsection{Estimation}
@@ -354,13 +359,12 @@ The EM-algorithm used for estimating our COMFORT-DCC model is described in the A
 \section{Empirical Results}
 %% --------------------------------------------------
 
-In this section, we examine the cross-sectional relation between unconditional beta, dynamic conditional beta (DCC), COMFORT-DCC beta (CDCC) and daily stock returns; detailed statistics and performance measures are provided. We compare our results with the results of \citeA{BET:16} and evaluate if the COMFORT-DCC model outperforms the DCC-GARCH model in terms of higher portfolio returns or lower risk.
-
+In this section, we examine the cross-sectional relation between unconditional beta, dynamic conditional beta (DCC), COMFORT-DCC beta (CDCC) and daily stock returns; detailed statistics and performance measures are provided. We compare our results with the results of \citeA{BET:16} and evaluate if the COMFORT-DCC model outperforms the DCC-GARCH model in terms of higher portfolio returns and lower portfolio risk.
 
 
 \subsection{Univariate Portfolio Analysis}
 
-A Univariate Portfolio Analysis approach is used to analyze the empirical data, as described in \citeA{BEM:16}. For each day, we estimate the CAPM, DCC-GARCH and COMFORT-DCC betas of each \indexName{} index stock using daily excess returns data. Afterwards, we assign each stock to a decile based on the sorted beta measure, where decile 1 contains the stocks with the lowest beta and decile 10 contains the stocks with the highest beta. All deciles hold the same number of stocks. We expect the stocks in the lowest beta decile to have significantly lower returns on the next trading day compared to the stocks in the highest beta decile. This hypothesis is tested using a high-low beta portfolio consisting of a long position in the highest-beta decile and a short position in the lowest-beta decile. 
+A Univariate Portfolio Analysis approach as described in \citeA{BEM:16} is used to analyze the empirical data. For each day, we estimate the CAPM, DCC-GARCH and COMFORT-DCC betas of each \indexName{} index constituent using daily excess returns data. Afterwards, we assign each stock to a decile based on the sorted beta measure, where decile 1 contains the stocks with the lowest betas and decile 10 contains the stocks with the highest betas. All deciles hold the same number of stocks. We expect that stocks in the lowest beta decile have significantly lower returns on the next trading day compared to stocks in the highest beta decile. This hypothesis is tested using a High-Low beta portfolio consisting of a long position in the highest-beta decile and a short position in the lowest-beta decile. 
 
 We present results for equal-weighted as well as value-weighted portfolios for the sample period from \periodFrom{} to \periodTo{}.
 
@@ -371,51 +375,59 @@ We present results for equal-weighted as well as value-weighted portfolios for t
 
 Table \ref{table:eq_univariate_portfolio_analysis} reports performance figures and average betas for decile portfolios calculated using the CAPM, DCC-GARCH and COMFORT-DCC models. Interestingly, and in contrast to the paper of \citeA{BET:16}, looking at the Fama-French 5 factor alpha value and the High-Low portfolio return value, CAPM does not perform substantially worse than DCC-GARCH or COMFORT-DCC using equal-weighted portfolios.
 
-\begin{table}[H]
+\begin{table}[H]\centering
     \caption{Univariate equal-weighted portfolios of all \indexName{} stocks sorted by beta}
     \label{table:eq_univariate_portfolio_analysis}
     \begin{threeparttable}
-    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios based on the CAPM-, DCC-GARCH and COMFORT-DCC beta measures. The column $RET$ reports the equal-weighted average excess return of the respective portfolio, the column $BETA$ reports the average equal-weighted beta within each decile. The row "High$-$Low" reports the average excess return taking an equal-weighted long position in the highest beta decile and a short position in the lowest beta decile. FF5 $\upalpha$ is the constant coefficient of a Fama-French 5 factor regression (\citeA{FA:15}). CAPM $\upalpha$ is the coefficient of a CAPM regression. The last row $\textit{SR}$ reports the Sharpe ratio of the High-Low portflio. All returns are reported as monthly excess returns in percentage terms, assuming 21 trading days in a month. Newey-West $t$-statistics are reported in parentheses.}
+    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios. The CAPM-252 and DCC-252 columns were estimated using a moving window of size 252 days, and DCC-1000 and CDCC-1000 were estimated using the past 1000 days. The column $RET$ reports the equal-weighted average excess return of the respective portfolio, the column $\beta$ reports the average equal-weighted beta within each decile. The row "High$-$Low" reports the average excess return taking an equal-weighted long position in the highest beta decile and a short position in the lowest beta decile. FF5 $\upalpha$ is the constant coefficient of a Fama-French 5 factor regression (\citeA{FA:15}). CAPM $\upalpha$ is the coefficient of a CAPM regression. The last row $\textit{SR}$ reports the Sharpe ratio of the High-Low portfolio. All returns are reported as monthly excess returns in percentage terms, assuming 21 trading days in a month. Newey-West $t$-statistics are reported in parentheses.}
     \ra{.7}
-    \begin{tabular}{@{}lccccccccc@{}}
+	\addtolength{\tabcolsep}{-0pt}
+    \begin{tabular}{@{}lcccccccccccc@{}}
         \toprule
-        & \multicolumn{2}{c}{CAPM} & & \multicolumn{2}{c}{DCC} & & \multicolumn{2}{c}{COMFORT-DCC}\\
-        \cmidrule{2-3} \cmidrule{5-6} \cmidrule{8-9}
-        Decile & $\textit{RET}$ & $\textit{BETA}_\textrm{CAPM}$ && $\textit{RET}$ & $\textit{BETA}_\textrm{DCC}$ && $\textit{RET}$ & $\textit{BETA}_\textrm{CDCC}$ \\ \midrule
+        & \multicolumn{2}{c}{CAPM-252} & & \multicolumn{2}{c}{DCC-252} & & \multicolumn{2}{c}{DCC-1000} & & \multicolumn{2}{c}{CDCC-1000}\\
+        \cmidrule{2-3} \cmidrule{5-6} \cmidrule{8-9} \cmidrule{11-12}
+        Decile & $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ \\ \midrule
         \TBLIMP{"../2 backtest/results/eq_univariate_portfolio_analysis.tex"}
         \bottomrule
     \end{tabular}
+	\addtolength{\tabcolsep}{0pt}
     \end{threeparttable}    
 \end{table}
 
-Comparing DCC-GARCH and COMFORT-DCC performance, we see very similar results---the High-Low portfolio returns, alpha values and Sharpe ratios are almost identical. The only noteworthy difference is the relatively high average beta value in decile 10 of the COMFORT-DCC model. Using equal-weighted portfolios, COMFORT-DCC does not outperform the DCC-GARCH model, and both do not significantly outperform CAPM either. A very high correlation value of 0.96 among all High-Low portfolio returns indicates no significant difference in predicting one-day-ahead stock returns.
+Comparing DCC-GARCH and COMFORT-DCC performance, we see very similar results---the High-Low portfolio returns, alpha values and Sharpe ratios are almost identical. The only noteworthy difference is the relatively high average beta value in decile 10 of the COMFORT-DCC model. Using equal-weighted portfolios, COMFORT-DCC does not outperform the DCC-GARCH model, and both do not significantly outperform CAPM either. A very high correlation value of 0.96 among all High-Low portfolio returns indicates no significant difference in predicting one-day ahead stock returns.
 
-Furthermore, \citeA{BET:16} report a monotonically increasing average return rate for their DCC-GARCH portfolios, but we cannot confirm this with our empirical data. All models generate higher average returns in the highest beta decile compared to the lowest beta decile, but deciles 2 to 9 do not show monotonically increasing portfolio returns.
+Furthermore, \citeA{BET:16} report a monotonically increasing average return for their DCC-GARCH decile portfolios, and our returns data shows a very similar pattern. All models generate higher average returns in the highest beta decile compared to the lowest beta decile. This evidence supports the hypothesis of a link between the dynamic conditional beta and the cross section of daily stock returns, although the corresponding $t$-statistics are not significant like in the findings of \citeA{BET:16} because of a much smaller sample size.
 
-Figure \ref{figure:eq_avg_beta_deciles_1_10} shows the beta dynamics of decile 1 and decile 10 for the CAPM, DCC-GARCH and COMFORT-DCC models over the sample period. As expected, the CAPM beta shows a smooth curve compared to the DCC and CDCC betas, because it does not vary withing the estimation period. On the other hand, DCC and CDCC beta show more movements due to their time-varying nature. As mentioned before, the relatively high average beta value in decile 10 of the COMFORT-DCC model manifests in relatively high beta values during the global financial crisis and the European debt crisis period. Looking at the covariance estimates of COMFORT-DCC, convergence issues seem to be the cause of these high beta values. Smoothing the covariance matrix does not help in this case, because the estimation errors are too big, and stronger smoothing would impair the time-varying estimation advantage compared to CAPM.
+Figure \ref{figure:eq_avg_beta_deciles_1_10} shows the beta dynamics of decile 1 and decile 10 for the CAPM, DCC-GARCH and COMFORT-DCC models over the sample period. As expected, the CAPM beta shows a smooth curve compared to the DCC and CDCC betas, because it does not vary within the estimation period. On the other hand, DCC and CDCC beta show more movements due to their time-varying nature. As mentioned before, the relatively high average beta value in decile 10 of the COMFORT-DCC model manifests in relatively high beta values during the global financial crisis and the European debt crisis period. Looking at the covariance estimates of COMFORT-DCC, convergence issues seem to be the cause of these high beta values. Smoothing the covariance matrix does not help in this case, because the estimation errors are too large, and stronger smoothing would impair the time-varying estimation advantage compared to CAPM.
+
+\newpage
 
 \begin{figure}[H]\centering
+	\vspace*{-2.7cm}
     \begin{tabular}{c}
         \FIGIMP{"../2 backtest/results/eq_avg_beta_deciles_1_10_CAPM.tex"}\vspace{-8mm} \\
-        (a) Average CAPM beta of deciles 1 and 10\vspace{-8mm} \\[0pt]
+        (a) Average CAPM-252 beta of deciles 1 and 10\vspace{-12mm} \\[0pt]
         \FIGIMP{"../2 backtest/results/eq_avg_beta_deciles_1_10_DCC.tex"}\vspace{-8mm} \\
-        (b) Average DCC beta of deciles 1 and 10\vspace{-8mm} \\[0pt]
+        (b) Average DCC-252 beta of deciles 1 and 10\vspace{-12mm} \\[0pt]
+        \FIGIMP{"../2 backtest/results/eq_avg_beta_deciles_1_10_DCC-1000.tex"}\vspace{-8mm} \\
+        (c) Average DCC-1000 beta of deciles 1 and 10\vspace{-12mm} \\[0pt]
         \FIGIMP{"../2 backtest/results/eq_avg_beta_deciles_1_10_COMFORT-DCC.tex"}\vspace{-8mm} \\
-        (c) Average CDCC beta of deciles 1 and 10 \\[0pt]
+        (d) Average CDCC-1000 beta of deciles 1 and 10 \\[0pt]
     \end{tabular}
     \caption{Average equal-weighted CAPM, DCC and CDCC betas of deciles 1 and 10}
 	\label{figure:eq_avg_beta_deciles_1_10}
 \end{figure}
 
+\newpage
 
-\begin{table}[H] \centering
+\begin{table}[H]\centering
     \caption{Beta standard deviations within each decile}
     \label{table:eq_beta_std_dev}
-    \caption*{\small This table presents the standard deviations of the average betas within each decile measured over the whole sample period.}
+    \caption*{\small This table presents the standard deviations of the average betas within each decile measured over the whole sample period for the different beta estimation methods.}
     \ra{.7}
-	\begin{tabular}{lccc}
+	\begin{tabular}{lcccc}
 	\toprule
-		Decile & $\sigma(\textit{BETA}_{\textrm{CAPM}})$ & $\sigma(\textit{BETA}_{\textrm{DCC}})$ & $\sigma(\textit{BETA}_{\textrm{CDCC}})$  \\ \midrule
+		Decile & $\sigma(\beta_{\textrm{CAPM-252}})$ & $\sigma(\beta_{\textrm{DCC-252}})$ & $\sigma(\beta_{\textrm{DCC-1000}})$ & $\sigma(\beta_{\textrm{CDCC-1000}})$  \\ \midrule
 		\TBLIMP{"../2 backtest/results/eq_beta_std_dev.tex"}
 		\bottomrule
 	\end{tabular}
@@ -429,13 +441,13 @@ Clear evidence of estimation errors and/or optimization convergence issues for C
     \caption{Firm characteristics and risk attributes of COMFORT-DCC portfolios}
     \label{table:eq_COMFORT-DCC_portfolio_characteristics}
     \begin{threeparttable}
-    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios based on the COMFORT-DCC beta. The column $RET$ reports the equal-weighted average excess return of the respective portfolio and the column $\textit{BETA}_\textrm{CDCC}$ reports the average equal-weighted beta within each decile. $\textit{SIZE}$ reports the average market capitalization in \$1M units, $\textit{ILLIQ}$ Amihud's average illiquidity measure (\citeA{YA:02}), $\textit{TURN}$ the average number of stocks changed each day proportional to the number of stocks in the respective decile, and the last column reports the average market share by capitalization of a decile relative to all stocks.}
+    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios based on the COMFORT-DCC beta. The column $RET$ reports the equal-weighted average excess return of the respective portfolio and the column $\beta$ reports the average equal-weighted beta within each decile. $\textit{SIZE}$ reports the average market capitalization in \$1M units, $\textit{ILLIQ}$ Amihud's average illiquidity measure (\citeA{YA:02}), $\textit{TURN}$ the average number of stocks changed each day proportional to the number of stocks in the respective decile, and the last column reports the average market share by aggregated capitalization of a decile relative to all stocks.}
     \ra{.7}
     \TBLIMP{"../2 backtest/results/eq_COMFORT-DCC_portfolio_characteristics.tex"}
     \end{threeparttable}    
 \end{table}
 
-Table \ref{table:eq_COMFORT-DCC_portfolio_characteristics} presents average firm characteristics and risk attributes of all COMFORT-DCC decile portfolios. The turnover ($\textit{TURN}$) measures how many stocks of a decile portfolio change each day, measured in percentage. For the deciles 1 and 10, the turnovers are the lowest with 7.1\% of the stocks changing each day, indicating that extreme beta values usually stay extreme for a certain time compared to the middle deciles. Moreover, Amihud's illiquidity measure ($\textit{ILLIQ}$) is the lowest for the extreme deciles indicating that those stocks are traded more often than the middle-decile stocks. Interestingly, the average firm size does not seem to correlate with beta, the market shares and average market capitalizations ($\textit{SIZE}$) are roughly the same. This does not reflect the findings of \citeA{BET:16}, who report that high DCC-beta deciles with higher average returns consist of stocks with larger market capitalizations compared to lower decile averages.
+Table \ref{table:eq_COMFORT-DCC_portfolio_characteristics} presents average firm characteristics and risk attributes of all COMFORT-DCC decile portfolios. The turnover ($\textit{TURN}$) measures how many stocks of a decile portfolio change each day, measured in percentage. For deciles 1 and 10, the turnovers are the lowest with 7.1\% of the stocks changing each day, indicating that extreme beta values usually stay extreme for a certain time compared to the middle deciles. Moreover, Amihud's illiquidity measure ($\textit{ILLIQ}$) is the lowest for the extreme deciles indicating that those stocks are traded more often than the middle-decile stocks. Interestingly, the average firm size does not seem to correlate with beta---the market shares and average market capitalizations ($\textit{SIZE}$) are roughly the same. This does not reflect the findings of \citeA{BET:16}, who report that high DCC-beta deciles with higher average returns consist of stocks with larger market capitalizations compared to lower decile averages. The corresponding table for the DCC-GARCH model can be found in the Appendix \ref{table:eq_DCC-GARCH_portfolio_characteristics_appendix}. This finding can be explained by \citeA{BET:16} using a much bigger stock sample than ours.
 
 
 
@@ -443,27 +455,28 @@ Table \ref{table:eq_COMFORT-DCC_portfolio_characteristics} presents average firm
 
 \subsubsection{Portfolio Analysis based on Value-Weighted Deciles}
 
-In this section, we conduct the same analysis as in the previous section with the only difference in the way average returns and average betas are calculated. Instead of using equal-weighted means for portfolio returns and betas, we use market capitalization as weighting to calculate the mean. The findings for the firm characteristics do not change, the variables other than average return and average beta are still equal-weighted. \\
+In this section, we conduct the same analysis as in the previous section, with the only difference being in the way average returns and average betas are calculated. Instead of using equal-weighted means for portfolio returns and betas, we use market capitalization as weighting to calculate the mean as described in Section \ref{section:pf_returns_calculation}. The findings for the firm characteristics as presented in \ref{table:eq_COMFORT-DCC_portfolio_characteristics} do not change; the variables other than average return ($\textit{RET}$) and average beta ($\beta$) are still equal-weighted. \\
 
-
-\begin{table}[H]
-    \caption{Univariate equal-weighted portfolios of all \indexName{} stocks sorted by beta}
+\begin{table}[H]\centering
+    \caption{Univariate value-weighted portfolios of all \indexName{} stocks sorted by beta}
     \label{table:vw_univariate_portfolio_analysis}
     \begin{threeparttable}
-    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios based on the CAPM-, DCC-GARCH and COMFORT-DCC beta measures. The column $RET$ reports the value-weighted average excess return of the respective portfolio, the column $BETA$ reports the average value-weighted beta within each decile. The row "High$-$Low" reports the average excess return taking an equal-weighted long position in the highest beta decile and a short position in the lowest beta decile. FF5 $\upalpha$ is the constant coefficient of a Fama-French 5 factor regression (\citeA{FA:15}). CAPM $\upalpha$ is the coefficient of a CAPM regression. The last row $\textit{SR}$ reports the Sharpe ratio of the High-Low portflio. All returns are reported as monthly excess returns in percentage terms, assuming 21 trading days in a month. Newey-West $t$-statistics are reported in parentheses.}
+    \caption*{\small For each day, all stocks of our \indexName{} sample within the period from \periodFrom{} to \periodTo{} are sorted into univariate decile portfolios. The CAPM-252 and DCC-252 columns were estimated using a moving window of size 252 days, and DCC-1000 and CDCC-1000 were estimated using the past 1000 days. The column $RET$ reports the value-weighted average excess return of the respective portfolio, the column $\beta$ reports the average value-weighted beta within each decile. The row "High$-$Low" reports the average excess return taking an equal-weighted long position in the highest beta decile and a short position in the lowest beta decile. FF5 $\upalpha$ is the constant coefficient of a Fama-French 5 factor regression (\citeA{FA:15}). CAPM $\upalpha$ is the coefficient of a CAPM regression. The last row $\textit{SR}$ reports the Sharpe ratio of the High-Low portfolio. All returns are reported as monthly excess returns in percentage terms, assuming 21 trading days in a month. Newey-West $t$-statistics are reported in parentheses.}
     \ra{.7}
-    \begin{tabular}{@{}lccccccccc@{}}
+	\addtolength{\tabcolsep}{-0pt}
+    \begin{tabular}{@{}lcccccccccccc@{}}
         \toprule
-        & \multicolumn{2}{c}{CAPM} & & \multicolumn{2}{c}{DCC} & & \multicolumn{2}{c}{COMFORT-DCC}\\
-        \cmidrule{2-3} \cmidrule{5-6} \cmidrule{8-9}
-        Decile & $\textit{RET}$ & $\textit{BETA}_\textrm{CAPM}$ && $\textit{RET}$ & $\textit{BETA}_\textrm{DCC}$ && $\textit{RET}$ & $\textit{BETA}_\textrm{CDCC}$ \\ \midrule
+        & \multicolumn{2}{c}{CAPM-252} & & \multicolumn{2}{c}{DCC-252} & & \multicolumn{2}{c}{DCC-1000} & & \multicolumn{2}{c}{CDCC-1000}\\
+        \cmidrule{2-3} \cmidrule{5-6} \cmidrule{8-9} \cmidrule{11-12}
+        Decile & $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ && $\textit{RET}$ & $\beta$ \\ \midrule
         \TBLIMP{"../2 backtest/results/vw_univariate_portfolio_analysis.tex"}
         \bottomrule
     \end{tabular}
+	\addtolength{\tabcolsep}{0pt}
     \end{threeparttable}    
 \end{table}
 
-Comparing the results based on value-weighted excess returns in Table \ref{table:vw_univariate_portfolio_analysis} to equal-weighted excess returns as shown in Table \ref{table:eq_univariate_portfolio_analysis}, we see significantly better performance and higher Sharpe ratios for all High-Low portfolios. The DCC-GARCH portfolio in particular shows a significant improvement of average excess returns increasing from $0.70$\% per month (Newey-West $t$-statistic of $1.24$) to $1.75$\% (Newey-West $t$-statistic of $2.88$) and the Sharpe ratio increasing from $0.18$ to $0.51$. The performance of the High-Low COMFORT-DCC portfolio also increases, but it does not outperform the DCC-GARCH model. It has lower excess returns of $1.30$\% per month compared to $1.75\%$ of the DCC-GARCH model, the Newey-West $t$-statistic of $2.13$ is also less significant compared to $2.88$ of the DCC-GARCH model, and the Sharpe ratio of $0.37$ is also substantially smaller than the $0.51$ of DCC-GARCH.
+Comparing the results based on value-weighted excess returns in Table \ref{table:vw_univariate_portfolio_analysis} to equal-weighted excess returns as shown in Table \ref{table:eq_univariate_portfolio_analysis}, we see significantly better performance and higher Sharpe ratios for all High-Low portfolios. The DCC-252 portfolio in particular shows a significant improvement of average excess returns increasing from $0.71$\% per month (Newey-West $t$-statistic of $1.24$) to $1.75$\% (Newey-West $t$-statistic of $2.88$) and the Sharpe ratio increasing from $0.18$ to $0.51$. The performance of the High-Low CDCC-1000 portfolio also increases, but it neither outperforms the DCC-252, nor the DCC-1000 model. It has lower excess returns of $1.3$\% per month, compared to $1.75\%$ of DCC-252 and $1.43\%$ of DCC-1000. The Sharpe ratio of $0.37$ is also substantially smaller than the $0.51$ of DCC-252 and $0.41$ of DCC-1000.
 
 To further analyze the performance of value-weighted High-Low portfolios, we plot the cumulative excess returns in Figure \ref{figure:vw_cum_ret_high-low}. The total excess returns of the market portfolio were added to the figure for the purposes of comparison.
 
@@ -474,7 +487,8 @@ To further analyze the performance of value-weighted High-Low portfolios, we plo
 	\label{figure:vw_cum_ret_high-low}
 \end{figure}
 
-Interestingly, all High-Low portfolios outperform the market portfolio, even the CAPM portfolio. One can easily see that the DCC-GARCH model is superior to the others, it reports an annualized Sharpe ratio of $0.514$, CAPM $0.318$ and the COMFORT-DCC portfolio $0.368$. For comparison, the market portfolio has an annualized Sharpe ratio of $0.250$ over the estimation period \periodFrom{} to \periodTo{}. The main performance driver of DCC-GARCH High-Low portfolio is the recovery period after the financial crisis 2008---before that, all three model portfolios performed similarly.
+One can easily see that the DCC-252 model is superior to the others in terms of performance and risk. It reports an annualized Sharpe ratio of $0.51$, CAPM-252 reports $0.32$, DCC-1000 reports $0.41$ and CDCC-1000 reports only $0.37$. For comparison, the market portfolio has an annualized Sharpe ratio of $0.25$ over the same estimation period ranging from \periodFrom{} to \periodTo{}. This means that DCC-252 enables the investor to achieve more performance at lower risk compared to the market portfolio, visible in the substantially higher Sharpe ratio. The main performance driver of the DCC-252 High-Low portfolio is the strong recovery period after the financial crisis of 2008---before that, all three portfolios performed similarly. The superior performance of the value-weighted High-Low portfolio during the recovery period after periods of market stress seem particularly interesting to investors, allowing them to recover the previously experienced losses and to outperform the market at the same time.
+
 
 
 
@@ -485,20 +499,23 @@ Interestingly, all High-Low portfolios outperform the market portfolio, even the
 \section{Conclusion}
 %% --------------------------------------------------
 
-Our empirical findings do not confirm the findings of \citeA{BET:16}. The performance of our DCC-GARCH model over the estimation period from \periodFrom{} to \periodTo{} for all stocks in the \indexName{} index is significantly worse than theirs. It does not generate a significant alpha over the estimation period with equal-weighted decile portfolios, which is the main method used in their paper. We are able to generate a CAPM alpha of $0.96\%$ per month via value-weighted decile portfolios without accounting for transaction costs. Our portfolio turnover is lower than theirs and the illiquidity measures are almost identical. Using their monthly transaction costs estimate of 35 basis points yields a CAPM alpha of $0.61\%$ and a Fama-French 5 factor regression alpha of $1.49\%$ per month, but this does conform to their approach since they use equal-weighted portfolios. Furthermore, the portfolio characteristics are different too. There seems to be no correlation between average decile returns/beta and a firm's market capitalization. Turnovers for the highest and lowest decile portfolios are identical in our study---\citeA{BET:16} report high turnover in the highest-beta decile and low turnover in the lowest-beta decile, which again is different.
+Our empirical findings for the DCC-GARCH construct confirm the findings of \citeA{BET:16}. The High-Low portfolio, used to test the hypothesis of a link between the dynamic conditional beta and the cross section of daily stock returns, yields positive excess returns and the decile portfolio returns show an increasing pattern, although not monotonically. The value-weighted High-Low portfolio return of $1.75\%$ per month without accounting for transaction costs is statistically highly significant (Newey-West $t$-statistic of $2.88$), the corresponding Fama-French alpha of $1.84\%$ per month is highly significant as well (Newey-West $t$-statistic of $3.54$). \citeA{BET:16} report for the value-weighted High-Low portfolio a monthly return of $0.91\%$ (Newey-West $t$-statistic of $2.03$) without accounting for transaction costs, the corresponding alpha is $1.24\%$ per month (Newey-West $t$-statistic of $3.80$). Using the monthly transaction costs estimate of 35 basis points yields a value-weighted monthly excess return of $1.4\%$ for our High-Low portfolio, and $0.56\%$ for the portfolio of \citeA{BET:16}. The illiquidity measures are almost identical, but our portfolio turnover is lower because of covariance smoothing, making it cheaper to implement the strategy compared to \citeA{BET:16}. Turnovers for the highest and lowest decile portfolios are identical in our study---\citeA{BET:16} report high turnover in the highest-beta decile and low turnover in the lowest-beta decile. Furthermore, they report that the average market capitalization of firms in the lowest beta decile is four times smaller compared to the highest decile, but the corresponding values in our study are the same. These differences can be explained by the different data sample and time frames used---\citeA{BET:16} use a substantially bigger stock universe and a longer time frame. Our sample goes back to \periodFrom{}, whereas theirs goes as far back as July 1963. They use all U.S.-based common stocks trading on the NYSE, AMEX, and NASDAQ exchanges with a stock price of \$5/share or more and with a market capitalization greater than \$10 million, whereas we use the \indexName{} index with 500 constituents.
 
-There are multiple possible explanations for the different outcomes of our empirical study. First, \citeA{BET:16} do not specify precisely how they estimate the (co-)variance of stock excess returns and market excess returns. There exist multiple possible approaches, leaving room for interpretation. Our approach was to estimate the covariance in a bivariate way. For each stock of the \indexName{} index, the covariance matrix of stock excess returns and market excess returns was estimated bivariately, which then was used to calculate the respective beta. A possible alternative is a multivariate estimation approach by using many stock excess return time series in conjunction with the market excess return time series to estimate the covariance matrix. This could be done in one step by estimation of the full covariance matrix, or in multiple steps by taking a subsample of all index constituents.
+Moreover, the replication of the paper of \citeA{BET:16} was subject to interpretation, because they do not explicitly specify precisely how they estimate the covariances of stock excess returns and market excess returns. There exist multiple possible approaches. Our approach was to estimate the covariance in a bivariate way. For each stock of the \indexName{} index, the covariance matrix of stock excess returns and market excess returns was estimated bivariately, which then was used to calculate the respective beta. A possible alternative is a multivariate estimation approach by using many stock excess return time series in conjunction with the market excess return time series to estimate the covariance matrix. This could be done in one step by the estimation of the full covariance matrix, or in multiple steps by taking a subsample of all index constituents.
 
-\noindent
-Second, failed model convergence and estimation errors are other pitfalls which are hard to spot and almost impossible to eliminate because of the nature of stock market returns and volatility time series, which are prone to jumps and clustering. This is especially distinct for the COMFORT-DCC model, which yields implausible covariance estimates in some cases, see Appendix \ref{sec:appendix:erroneous_covariances}. It is also apparent by looking at the average beta of the highest beta decile, which is substantially higher than the average beta of decile 9 and the average beta of decile 10 for the DCC-GARCH model. Same holds true for the standard deviation of the average beta in decile 10 of COMFORT-DCC, it is substantially bigger than the one of DCC-GARCH.
 
-\noindent
-Third, \citeA{BET:16} use a substantially bigger stock universe and a longer time frame. Our sample goes back to \periodFrom{}, whereas theirs goes as far back as July 1963. They use all U.S.-based common stocks trading on the NYSE, AMEX, and NASDAQ exchanges with a stock price of \$5/share or more and with market capitalization greater than \$10 million, whereas we only use the \indexName{} index with 500 components. The stock markets during the more recent time period of our sample likely behave differently compared to the period from 1963 to 1996, possibly partly explaning our different findings. Noteworthy, our sample period faced two major financial crises, which most likely introduced different market regimes and therefore affected the performance of our one-step-ahead predictions.
+There are various reasons why the COMFORT-DCC model (CDCC-1000) does not outperform the DCC-GARCH constructs (DCC-252 and DCC-1000) in our setting.
 
-There are two major reasons why the COMFORT-DCC model does not outperform the DCC-GARCH construct. First, the COMFORT-DCC model was estimated each day with a window size of 1000 days, this is approximately four times bigger than the window size of 252 days of the DCC-GARCH model. The window size of 1000 days for COMFORT-DCC was chosen to ease parameter convergence and reduce estimation errors. This leads to the conclusion that a smaller window size is more important than having an underlying model distribution accounting for asymmetry and fat-tails like the multivariate asymmetric Laplace distribution used in our COMFORT-DCC setting compared to the Gaussian distribution used in the DCC-GARCH model.
+First, covariance estimation errors, especially for the highest beta decile stocks, impair our High-Low portfolio analysis. The empirical findings provide evidence of model optimization problems, see Appendix \ref{sec:appendix:erroneous_covariances}. They are also apparent by looking at the average beta of the highest beta decile, which is substantially greater than the average beta of decile 9 and the average beta of decile 10 for the DCC-GARCH model. Same holds true for the standard deviation of the average beta in decile 10 of COMFORT-DCC---it is substantially greater than the ones of DCC-GARCH. Reliable and consistent beta estimates are crucial for our study, because we rely on the extreme cases (highest and lowest betas) to predict the one-step-ahead cross section of stock returns; any extreme values due to estimation errors directly bias our results. 
 
-\noindent
-Second, estimation errors, especially for the highest beta decile stocks, impair our High-Low portfolio analysis. Reliable and consistent model estimations are crucial for our study, because we rely on the extreme cases (highest and lowest betas) to predict the one-step-ahead cross section of stock returns. Any extreme values due to estimation errors directly bias our results. The problems faced with COMFORT-DCC do not necessarily imply that the underlying model is less suitable for the task presented, but it indicates that the model estimation is more intricate. This leaves us with an inconclusive answer wheter COMFORT-DCC in our setting outperforms the DCC-GARCH model or not, further studies are required.
+Second, the COMFORT-DCC model was estimated each day with a window size of 1000 days, which is approximately four times bigger than the one of the DCC-252 model. The window size for COMFORT-DCC was chosen that way to ease parameter convergence and reduce estimation errors. The DCC-GARCH model with a window size of 1000 days performs worse than the 252 days counterpart, but still better than the COMFORT-DCC model.
+
+Third, the bivariate estimation method likely results in different estimates for the parameters of the Generalized Inverse Gaussian (GIG) distribution of the mixing factor $G_t$ (see \citeA{PAP:15.1}), although the model assumes that the mixing factor estimates are the same for all asset returns at time $t$. This additional degree of freedom likely introduces less precise/more random COMFORT-DCC model estimates.
+
+These findings let us conclude that reliable beta estimates combined with a shorter estimation window are more important than having a model accounting for asymmetry, fat-tails and other stylized facts of financial returns, because accounting for these comes at the cost of less reliable estimates and tend to require bigger samples for estimation. The estimation problems the COMFORT-DCC model faces do not necessarily imply that the underlying model is less suitable for the task presented---since it accounts for major stylized facts of asset returns, which the DCC-GARCH does not---but it indicates that the estimation process is more intricate. This leaves us with an inconclusive answer whether COMFORT-DCC outperforms the DCC-GARCH model.
+
+The replication findings show promising results regarding the investment strategy used by \citeA{BET:16}, it outperforms the market and has higher risk-adjusted returns. Further studies of the COMFORT-DCC model with more reliable model estimates are required. A multivariate estimation approach should be considered in order to estimate the GIG parameters of the univariate mixing factor over all assets. The GARCH-SV extension as additional source of correlation dynamics, and other extensions are other options to potentially increase the forecasting accuracy. As the results of DCC-252 and DCC-1000 show, a shorter estimation window yields a higher risk-adjusted and absolute performance, and should therefore be considered. Another interesting finding is the strong performance of DCC-252 after periods of market stress, where it outperforms the market portfolio by a big margin. This effect seems to be particularly interesting in combination with other strategies, therefore making it attractive for further studies.
+
 
 
 
@@ -508,7 +525,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 %% References
 %% --------------------------------------------------
 \newpage
-\bibliography{references}
+\bibliography{_references}
 
 
 
@@ -531,7 +548,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \subsubsection{Portfolio and Firm Characteristics}
 
 \begin{table}[H]
-    \caption{Characteristics of equal-weighted CAPM portfolios}
+    \caption{Characteristics of equal-weighted CAPM portfolios with a window size of 252 days}
     \label{table:eq_CAPM_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -540,7 +557,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \end{table}
 
 \begin{table}[H]
-    \caption{Characteristics of equal-weighted DCC-GARCH portfolios}
+    \caption{Characteristics of equal-weighted DCC-GARCH portfolios with a window size of 252 days}
     \label{table:eq_DCC-GARCH_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -549,7 +566,16 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \end{table}
 
 \begin{table}[H]
-    \caption{Characteristics of equal-weighted COMFORT-DCC portfolios}
+    \caption{Characteristics of equal-weighted DCC-GARCH portfolios with a window size of 1000 days}
+    \label{table:eq_DCC-GARCH-1000_portfolio_characteristics_appendix}
+    \begin{threeparttable}
+    \ra{.7}
+    \TBLIMP{"../2 backtest/results/eq_DCC-1000_portfolio_characteristics.tex"}
+    \end{threeparttable}    
+\end{table}
+
+\begin{table}[H]
+    \caption{Characteristics of equal-weighted COMFORT-DCC portfolios with a window size of 1000 days}
     \label{table:eq_COMFORT-DCC_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -559,7 +585,9 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 
 
-\subsubsection{Average Equal-Weighted Cumulative Decile Returns}
+
+
+\subsubsection{Average Equal-Weighted Excess Returns per Decile}
 
 \begin{figure}[H]
 	\vspace{-10mm}
@@ -570,7 +598,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 
 
-\subsubsection{Portfolio Returns Statistics}
+\subsubsection{Equal-Weighted High-Low Portfolio Performance}
 
 \begin{figure}[H]
 	\vspace{-12mm}
@@ -579,26 +607,32 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 	\label{figure:eq_cum_ret_high-low_appendix}
 \end{figure}
 
-
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/eq_cum_ret_deciles_CAPM.tex"}\vspace{-15mm}
-	\caption{Cumulative equal-weighted excess returns of CAPM beta decile portfolios}
-	\label{figure:eq_cum_ret_deciles_CAPM}
+	\caption{Cumulative equal-weighted excess returns of CAPM beta decile portfolios with a window size of 252 days}
+	\label{figure:eq_cum_ret_deciles_CAPM_appendix}
 \end{figure}
 
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/eq_cum_ret_deciles_DCC.tex"}\vspace{-15mm}
-	\caption{Cumulative equal-weighted excess returns of DCC-GARCH beta decile portfolios}
-	\label{figure:eq_cum_ret_deciles_DCC}
+	\caption{Cumulative equal-weighted excess returns of DCC-GARCH beta decile portfolios with a window size of 252 days}
+	\label{figure:eq_cum_ret_deciles_DCC_appendix}
+\end{figure}
+
+\begin{figure}[H]
+	\vspace{-12mm}
+	\hspace{-5mm}\FIGIMP{"../2 backtest/results/eq_cum_ret_deciles_DCC-1000.tex"}\vspace{-15mm}
+	\caption{Cumulative equal-weighted excess returns of DCC-GARCH beta decile portfolios with a window size of 1000 days}
+	\label{figure:eq_cum_ret_deciles_DCC-1000_appendix}
 \end{figure}
 
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/eq_cum_ret_deciles_COMFORT-DCC.tex"}\vspace{-15mm}
-	\caption{Cumulative equal-weighted excess returns of COMFORT-DCC beta decile portfolios}
-	\label{figure:eq_cum_ret_deciles_COMFORT-DCC}
+	\caption{Cumulative equal-weighted excess returns of COMFORT-DCC beta decile portfolios with a window size of 1000 days}
+	\label{figure:eq_cum_ret_deciles_COMFORT-DCC_appendix}
 \end{figure}
 
 
@@ -613,7 +647,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \subsubsection{Portfolio and Firm Characteristics}
 
 \begin{table}[H]
-    \caption{Characteristics of value-weighted CAPM portfolios}
+    \caption{Characteristics of value-weighted CAPM portfolios with a window size of 252 days}
     \label{table:vw_CAPM_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -622,7 +656,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \end{table}
 
 \begin{table}[H]
-    \caption{Characteristics of value-weighted DCC-GARCH portfolios}
+    \caption{Characteristics of value-weighted DCC-GARCH portfolios with a window size of 252 days}
     \label{table:vw_DCC-GARCH_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -631,7 +665,16 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \end{table}
 
 \begin{table}[H]
-    \caption{Characteristics of value-weighted COMFORT-DCC portfolios}
+    \caption{Characteristics of value-weighted DCC-GARCH portfolios with a window size of 1000 days}
+    \label{table:vw_DCC-GARCH-1000_portfolio_characteristics_appendix}
+    \begin{threeparttable}
+    \ra{.7}
+    \TBLIMP{"../2 backtest/results/vw_DCC-1000_portfolio_characteristics.tex"}
+    \end{threeparttable}    
+\end{table}
+
+\begin{table}[H]
+    \caption{Characteristics of value-weighted COMFORT-DCC portfolios with a window size of 1000 days}
     \label{table:vw_COMFORT-DCC_portfolio_characteristics_appendix}
     \begin{threeparttable}
     \ra{.7}
@@ -641,7 +684,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 
 
-\subsubsection{Average Value-Weighted Cumulative Decile Returns}
+\subsubsection{Average Value-Weighted Excess Returns per Decile}
 
 \begin{figure}[H]
 	\vspace{-10mm}
@@ -652,7 +695,7 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 
 
-\subsubsection{Portfolio Returns Statistics}
+\subsubsection{Value-Weighted High-Low Portfolio Performance}
 
 \begin{figure}[H]
 	\vspace{-12mm}
@@ -665,22 +708,29 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/vw_cum_ret_deciles_CAPM.tex"}\vspace{-15mm}
-	\caption{Cumulative value-weighted excess returns of CAPM beta decile portfolios}
-	\label{figure:vw_cum_ret_deciles_CAPM}
+	\caption{Cumulative value-weighted excess returns of CAPM beta decile portfolios with a window size of 252 days}
+	\label{figure:vw_cum_ret_deciles_CAPM_appendix}
 \end{figure}
 
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/vw_cum_ret_deciles_DCC.tex"}\vspace{-15mm}
-	\caption{Cumulative value-weighted excess returns of DCC-GARCH beta decile portfolios}
-	\label{figure:vw_cum_ret_deciles_DCC}
+	\caption{Cumulative value-weighted excess returns of DCC-GARCH beta decile portfolios with a window size of 252 days}
+	\label{figure:vw_cum_ret_deciles_DCC_appendix}
+\end{figure}
+
+\begin{figure}[H]
+	\vspace{-12mm}
+	\hspace{-5mm}\FIGIMP{"../2 backtest/results/vw_cum_ret_deciles_DCC-1000.tex"}\vspace{-15mm}
+	\caption{Cumulative value-weighted excess returns of DCC-GARCH beta decile portfolios with a window size of 1000 days}
+	\label{figure:vw_cum_ret_deciles_DCC-1000_appendix}
 \end{figure}
 
 \begin{figure}[H]
 	\vspace{-12mm}
 	\hspace{-5mm}\FIGIMP{"../2 backtest/results/vw_cum_ret_deciles_COMFORT-DCC.tex"}\vspace{-15mm}
-	\caption{Cumulative value-weighted excess returns of COMFORT-DCC beta decile portfolios}
-	\label{figure:vw_cum_ret_deciles_COMFORT-DCC}
+	\caption{Cumulative value-weighted excess returns of COMFORT-DCC beta decile portfolios with a window size of 1000 days}
+	\label{figure:vw_cum_ret_deciles_COMFORT-DCC_appendix}
 \end{figure}
 
 
@@ -689,12 +739,12 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 
 
-\subsection{Erroneous COMFORT-DCC Covariances Estimates Compared to DCC-GARCH Estimates} \label{sec:appendix:erroneous_covariances}
+\subsection{Erroneous COMFORT-DCC Covariance Estimates Compared to DCC-GARCH Estimates} \label{sec:appendix:erroneous_covariances}
 
 \begin{figure}[H]
 	\hspace{-5mm}\FIGIMP{"erroneous_covariances.tex"}
-	\caption{Erroneous COMFORT-DCC covariances estimates compared to DCC-GARCH of various CRSP stocks identified by PERMNO}
-	\label{figure:erroneous_covariances}
+	\caption{Erroneous COMFORT-DCC covariance estimates compared to DCC-GARCH of various CRSP stocks identified by PERMNO}
+	\label{figure:erroneous_covariances_appendix}
 \end{figure}
 
 
@@ -703,9 +753,9 @@ Second, estimation errors, especially for the highest beta decile stocks, impair
 
 \subsection{Codes}
 
-\subsubsection{\indexName{} constituents WRDS data query}
+\subsubsection{\indexName{} Constituents WRDS Data Query} \label{sec:appendix:wrds_query}
 
-Figure \ref{figure:wrds_data_query} presents the SQL query used to retrieve CRSP pricing data and firm characteristics of all \indexName{} constituents via the Wharton Research Data Services (WRDS) API (\citeA{API:WRDS}) for the sample period from \periodFrom{} to \periodTo{}.
+Figure \ref{figure:wrds_data_query_appendix} presents the SQL query used to retrieve CRSP pricing data and firm characteristics of all \indexName{} constituents via the Wharton Research Data Services (WRDS) API (\citeA{API:WRDS}) for the sample period from \periodFrom{} to \periodTo{}.
 
 \begin{figure}[H]
 \begin{samepage}
@@ -725,15 +775,15 @@ select b.permno, b.date, b.ret, d.dlret, d.dlstcd,
 \end{lstlisting}
 \end{samepage}
 \caption{WRDS SQL query used to load all \indexName{} index constituents for the sample period from \periodFrom{} to \periodTo{}}
-\label{figure:wrds_data_query}
+\label{figure:wrds_data_query_appendix}
 \end{figure}
 
 
 
 
-\subsubsection{COMFORT-DCC Matlab setType.m model configuration}
+\subsubsection{COMFORT-DCC Matlab setType.m Model Configuration}
 
-Figure \ref{figure:COMFORT-DCC_setType} presents the model configuration used for COMFORT-DCC estimation. It configures a multivariate, asymmetric Laplace distribution (MALap), no GARCH-SV dynamics and a Dynamic Conditional Correlation (DCC) model. Moreover, EM-algorithm is used for model estimation.
+Figure \ref{figure:COMFORT-DCC_setType_appendix} presents the model configuration used for COMFORT-DCC estimation. It configures a multivariate, asymmetric Laplace distribution (MALap), no GARCH-SV dynamics and a Dynamic Conditional Correlation (DCC) model. Moreover, EM-algorithm is used for model estimation.
 
 \begin{figure}[H]
 \begin{samepage}
@@ -752,7 +802,7 @@ end
 \end{lstlisting}
 \end{samepage}
 \caption{COMFORT-DCC Matlab setType.m model configuration}
-\label{figure:COMFORT-DCC_setType}
+\label{figure:COMFORT-DCC_setType_appendix}
 \end{figure}
 
 
@@ -762,18 +812,13 @@ end
 
 
 
+\subsection{Model Optimization Runtimes}
 
-
-
-
-
-\subsection{Model estimation runtimes}
-
-All runtimes were recorded on the following machine:
+All model optimization runtimes were measured using a single computation thread. Table \ref{table:tbl-machine} lists the specification of the machine used to run the calculations.
 
 \begin{table}[H]
 \centering
-    \ra{.7}
+\ra{.7}
 \begin{tabular}{|l|l|}
 \hline
 Type              & Personal Computer \\ \hline
@@ -783,31 +828,18 @@ Memory            & DDR4, 2448 MHz, 16 GB \\ \hline
 Operating System  & Windows 10 Pro, 64 bit, build 1803 \\ \hline
 Matlab            & R2017b \\ \hline
 \end{tabular}
-\caption{Specification of PC running model estimation}
-\label{tbl-machine}
+\caption{Specification of machine running model estimations}
+\label{table:tbl-machine}
 \end{table}
 
 
-Table \ref{table:estimation_runtime_statistics_CDCC} reports summary statistics measured in seconds for the estimation of a single window with size $1000$ and two assets for the COMFORT-DCC model. The statistics were derived using $9329$ samples and report an average runtime of approx. $31$ seconds per window, resulting in an expected runtime of $2$ hours and $10$ minutes to estimate the covariance of two assets over a whole year, assuming $252$ trading days in a year. Measures were taken using a single computation thread. \\
 
-\begin{table}[H] \centering
-\caption{Model estimation runtime statistics in seconds for single window estimations with two assets using the COMFORT-DCC model}
-\label{table:estimation_runtime_statistics_CDCC}
-\ra{.8}
-\begin{tabular}{@{\extracolsep{5pt}}ccccccc} 
-	\hline
-	N & Mean & St. Dev. & Min & Pctl(25) & Pctl(75) & Max \\ 
-	\hline
-	9,329 & 30.876 & 4.882 & 17 & 28 & 33 & 69 \\ 
-	\hline
-\end{tabular} 
-\end{table} 
+\subsubsection{Runtimes of DCC-GARCH Optimization with a Window Size of 252 Days}
 
-
-Analogously, Table \ref{table:estimation_runtime_statistics_DCC} reports summary statistics measured in seconds for the estimation of a single window with size $252$ and two assets for the DCC-GARCH model. The statistics were derived using $542$ samples and report an average runtime of approx. $1.691$ seconds per window, resulting in an expected runtime of $7$ minutes to estimate the covariance of two assets over a whole year, assuming $252$ trading days in a year. Measures were taken using a single computation thread. \\
+Table \ref{table:estimation_runtime_statistics_DCC} reports summary statistics measured in seconds for the estimation of a single window with size $252$ and two assets for the DCC-GARCH model. The statistics were derived using $542$ samples and report an average runtime of approximately $1.691$ seconds per window, resulting in an expected runtime of $7$ minutes to estimate the covariance of two assets over a whole year, assuming $252$ trading days in a year. \\
 
 \begin{table}[H] \centering 
-\caption{Model estimation runtime statistics in seconds for single window estimations with two assets using the COMFORT-DCC model}
+\caption{Model optimization runtimes in seconds for two assets and an estimation window of 252 days using the DCC-GARCH model}
 \label{table:estimation_runtime_statistics_DCC}
 \ra{.8}
 \begin{tabular}{@{\extracolsep{5pt}}ccccccc} 
@@ -816,8 +848,48 @@ Analogously, Table \ref{table:estimation_runtime_statistics_DCC} reports summary
 	\hline
 	542 & 1.691 & 0.152 & 0.949 & 1.653 & 1.765 & 2.010 \\ 
 	\hline
-\end{tabular} 
-\end{table} 
+\end{tabular}
+\end{table}
+
+
+
+
+\subsubsection{Runtimes of DCC-GARCH Optimization with a Window Size of 1000 Days}
+
+Table \ref{table:estimation_runtime_statistics_DCC_1000} reports summary statistics measured in seconds for the estimation of a single window with size $1000$ and two assets for the DCC-GARCH model. The statistics were derived using $578$ samples and report an average runtime of approximately $4.487$ seconds per window, resulting in an expected runtime of $19$ minutes to estimate the covariance of two assets over a whole year, assuming $252$ trading days in a year. \\
+
+\begin{table}[H] \centering
+\caption{Model optimization runtimes in seconds for two assets and an estimation window of 1000 days using the DCC-GARCH model}
+\label{table:estimation_runtime_statistics_DCC_1000}
+\ra{.8}
+\begin{tabular}{@{\extracolsep{5pt}}ccccccc} 
+	\hline
+	N & Mean & St. Dev. & Min & Pctl(25) & Pctl(75) & Max \\ 
+	\hline
+	578 & 4.487 & 0.473 & 3.746 & 4.072 & 4.934 & 5.830 \\ 
+	\hline
+\end{tabular}
+\end{table}
+
+
+
+
+\subsubsection{Runtimes of COMFORT-DCC Optimization with a Window Size of 1000 Days}
+
+Table \ref{table:estimation_runtime_statistics_CDCC} reports summary statistics measured in seconds for the estimation of a single window with size $1000$ and two assets for the COMFORT-DCC model. The statistics were derived using $9329$ samples and report an average runtime of approximately $31$ seconds per window, resulting in an expected runtime of $2$ hours and $10$ minutes to estimate the covariance of two assets over a whole year, assuming $252$ trading days in a year. \\
+
+\begin{table}[H] \centering
+\caption{Model optimization runtimes in seconds for two assets and an estimation window of 1000 days using the COMFORT-DCC model}
+\label{table:estimation_runtime_statistics_CDCC}
+\ra{.8}
+\begin{tabular}{@{\extracolsep{5pt}}ccccccc} 
+	\hline
+	N & Mean & St. Dev. & Min & Pctl(25) & Pctl(75) & Max \\ 
+	\hline
+	9329 & 30.876 & 4.882 & 17 & 28 & 33 & 69 \\ 
+	\hline
+\end{tabular}
+\end{table}
 
 
 
@@ -829,8 +901,7 @@ Analogously, Table \ref{table:estimation_runtime_statistics_DCC} reports summary
 %% Statutory Declaration
 %% --------------------------------------------------
 \newpage
-
-\input{statutory_declaration.tex}
+\input{sec_statutory_declaration.tex}
 
 
 

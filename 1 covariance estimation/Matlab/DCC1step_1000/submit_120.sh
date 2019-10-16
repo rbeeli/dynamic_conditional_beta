@@ -1,0 +1,1 @@
+bsub -R "rusage[mem=2048]" -n 48 -W 120:00 "module load new matlab/9.3 && mkdir -p out && mkdir -p logs && ./run_euler.sh"
