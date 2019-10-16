@@ -10,6 +10,9 @@ Paolella and Polak (2015) developed the more realistic, statistically advanced C
 
 This thesis replicates the results obtained by Bali, Engle and Tang (2016) using their Gaussian DCC-GARCH construct on daily stock returns data, with a focus on the market neutral investment strategy results. Subsequently, the DCC-GARCH filter is replaced with the COMFORT model, with the hope and expectation of more significant beta estimations, resulting in a significantly better performance of the investment strategy, namely lower risk with equal or even higher returns
 
+# Performance of models investigated
+
+![Performance of models investigated](models_performance.png)
 
 # References
 
